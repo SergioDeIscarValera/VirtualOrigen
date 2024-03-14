@@ -1,8 +1,8 @@
 import 'package:get/get.dart';
 import 'package:virtual_origen_app/themes/colors.dart';
 
-class MySnackBar {
-  static void snackError(String message) {
+class MySnackbar {
+  void snackError(String message) {
     Get.snackbar(
       "Error",
       message.tr,
@@ -11,7 +11,7 @@ class MySnackBar {
     );
   }
 
-  static void snackSuccess(String message) {
+  void snackSuccess(String message) {
     Get.snackbar(
       "Success",
       message.tr,
@@ -20,7 +20,7 @@ class MySnackBar {
     );
   }
 
-  static void snackWarning(String message) {
+  void snackWarning(String message) {
     Get.snackbar(
       "Warning",
       message.tr,
