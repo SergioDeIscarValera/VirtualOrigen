@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class ResponsiveLayout extends StatelessWidget {
   const ResponsiveLayout({
@@ -18,9 +19,9 @@ class ResponsiveLayout extends StatelessWidget {
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, contraints) {
-        if (contraints.maxWidth < widthTablet) {
+        if (context.width < widthTablet) {
           return mobile;
-        } else if (contraints.maxWidth < widthDesktop) {
+        } else if (context.width < widthDesktop) {
           return tablet;
         } else {
           return desktop;

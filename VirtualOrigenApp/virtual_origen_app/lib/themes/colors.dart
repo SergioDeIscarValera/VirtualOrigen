@@ -34,6 +34,11 @@ enum MyColors {
   LIGHT,
   DARK,
 
+  // Otros
+  ORANGE,
+  PURPLE,
+  PINK,
+
   // Énfasis
   PRIMARY_EMPHSIS,
   SECONDARY_EMPHSIS,
@@ -43,6 +48,11 @@ enum MyColors {
   DANGER_EMPHSIS,
   LIGHT_EMPHSIS,
   DARK_EMPHSIS,
+
+  // Otros énfasis
+  ORANGE_EMPHSIS,
+  PURPLE_EMPHSIS,
+  PINK_EMPHSIS,
 
   // Especiales
   CURRENT,
@@ -69,6 +79,13 @@ extension MyColorsExten on MyColors {
       case MyColors.DARK:
         return const Color(0xFF343A40);
 
+      case MyColors.ORANGE:
+        return const Color(0xFFfD7E14);
+      case MyColors.PURPLE:
+        return const Color(0xFF6F42C1);
+      case MyColors.PINK:
+        return const Color(0xFFE83E8C);
+
       case MyColors.PRIMARY_EMPHSIS:
         return const Color(0xFF304E45);
       case MyColors.SECONDARY_EMPHSIS:
@@ -85,6 +102,13 @@ extension MyColorsExten on MyColors {
         return const Color(0xFF5A5A5A);
       case MyColors.DARK_EMPHSIS:
         return const Color(0xFF5A5A5A);
+
+      case MyColors.ORANGE_EMPHSIS:
+        return const Color(0xFFC96511);
+      case MyColors.PURPLE_EMPHSIS:
+        return const Color(0xFF321F56);
+      case MyColors.PINK_EMPHSIS:
+        return const Color(0xFF7B234C);
 
       case MyColors.CURRENT:
         return Get.isDarkMode ? MyColors.DARK.color : MyColors.LIGHT.color;
@@ -112,6 +136,13 @@ extension MyColorsExten on MyColors {
       case MyColors.DARK:
         return MyColors.DARK_EMPHSIS.color;
 
+      case MyColors.ORANGE:
+        return MyColors.ORANGE_EMPHSIS.color;
+      case MyColors.PURPLE:
+        return MyColors.PURPLE_EMPHSIS.color;
+      case MyColors.PINK:
+        return MyColors.PINK_EMPHSIS.color;
+
       case MyColors.PRIMARY_EMPHSIS:
         return MyColors.PRIMARY.color;
       case MyColors.SECONDARY_EMPHSIS:
@@ -128,6 +159,13 @@ extension MyColorsExten on MyColors {
         return MyColors.LIGHT.color;
       case MyColors.DARK_EMPHSIS:
         return MyColors.DARK.color;
+
+      case MyColors.ORANGE_EMPHSIS:
+        return MyColors.ORANGE.color;
+      case MyColors.PURPLE_EMPHSIS:
+        return MyColors.PURPLE.color;
+      case MyColors.PINK_EMPHSIS:
+        return MyColors.PINK.color;
 
       case MyColors.CURRENT:
         return Get.isDarkMode
@@ -159,6 +197,13 @@ extension MyColorsExten on MyColors {
       case MyColors.DARK:
         return 0xFF343A40;
 
+      case MyColors.ORANGE:
+        return 0xFFfD7E14;
+      case MyColors.PURPLE:
+        return 0xFF6F42C1;
+      case MyColors.PINK:
+        return 0xFFE83E8C;
+
       case MyColors.PRIMARY_EMPHSIS:
         return 0xFF304E45;
       case MyColors.SECONDARY_EMPHSIS:
@@ -176,10 +221,91 @@ extension MyColorsExten on MyColors {
       case MyColors.DARK_EMPHSIS:
         return 0xFF5A5A5A;
 
+      case MyColors.ORANGE_EMPHSIS:
+        return 0xFFC96511;
+      case MyColors.PURPLE_EMPHSIS:
+        return 0xFF321F56;
+      case MyColors.PINK_EMPHSIS:
+        return 0xFF7B234C;
+
       case MyColors.CURRENT:
         return Get.isDarkMode ? MyColors.DARK.hex : MyColors.LIGHT.hex;
       case MyColors.CONTRARY:
         return Get.isDarkMode ? MyColors.LIGHT.hex : MyColors.DARK.hex;
+    }
+  }
+
+  bool get isSelectable {
+    switch (this) {
+      case MyColors.PRIMARY:
+      case MyColors.SECONDARY:
+      case MyColors.SUCCESS:
+      case MyColors.INFO:
+      case MyColors.WARNING:
+      case MyColors.DANGER:
+      case MyColors.ORANGE:
+      case MyColors.PURPLE:
+      case MyColors.PINK:
+        return true;
+      default:
+        return false;
+    }
+  }
+
+  String get token {
+    switch (this) {
+      case MyColors.PRIMARY:
+        return 'primary';
+      case MyColors.SECONDARY:
+        return 'secondary';
+      case MyColors.SUCCESS:
+        return 'success';
+      case MyColors.INFO:
+        return 'info';
+      case MyColors.WARNING:
+        return 'warning';
+      case MyColors.DANGER:
+        return 'danger';
+      case MyColors.LIGHT:
+        return 'light';
+      case MyColors.DARK:
+        return 'dark';
+
+      case MyColors.ORANGE:
+        return 'orange';
+      case MyColors.PURPLE:
+        return 'purple';
+      case MyColors.PINK:
+        return 'pink';
+
+      case MyColors.PRIMARY_EMPHSIS:
+        return 'primary-emphasis';
+      case MyColors.SECONDARY_EMPHSIS:
+        return 'secondary-emphasis';
+      case MyColors.SUCCESS_EMPHSIS:
+        return 'success-emphasis';
+      case MyColors.INFO_EMPHSIS:
+        return 'info-emphasis';
+      case MyColors.WARNING_EMPHSIS:
+        return 'warning-emphasis';
+      case MyColors.DANGER_EMPHSIS:
+        return 'danger-emphasis';
+      case MyColors.LIGHT_EMPHSIS:
+        return 'light-emphasis';
+      case MyColors.DARK_EMPHSIS:
+        return 'dark-emphasis';
+
+      case MyColors.ORANGE_EMPHSIS:
+        return 'orange-emphasis';
+      case MyColors.PURPLE_EMPHSIS:
+        return 'purple-emphasis';
+      case MyColors.PINK_EMPHSIS:
+        return 'pink-emphasis';
+
+      case MyColors.CURRENT:
+        return 'current';
+      case MyColors.CONTRARY:
+        return 'contrary';
     }
   }
 }

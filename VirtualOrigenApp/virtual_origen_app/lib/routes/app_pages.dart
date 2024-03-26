@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:virtual_origen_app/content/auth/pages/email_validate_page.dart';
 import 'package:virtual_origen_app/content/auth/pages/forgot_password_page.dart';
@@ -6,6 +5,18 @@ import 'package:virtual_origen_app/content/auth/pages/login_page.dart';
 import 'package:virtual_origen_app/content/auth/pages/singin_page.dart';
 import 'package:virtual_origen_app/content/first_time/pages/first_time_page.dart';
 import 'package:virtual_origen_app/content/first_time/storage/binding/first_time_binding.dart';
+import 'package:virtual_origen_app/content/main/pages/home_page.dart';
+import 'package:virtual_origen_app/content/main/pages/inversor_page.dart';
+import 'package:virtual_origen_app/content/main/pages/property_page.dart';
+import 'package:virtual_origen_app/content/main/pages/smart_device_page.dart';
+import 'package:virtual_origen_app/content/main/pages/user_page.dart';
+import 'package:virtual_origen_app/content/main/pages/weather_page.dart';
+import 'package:virtual_origen_app/content/main/storage/binding/home_binding.dart';
+import 'package:virtual_origen_app/content/main/storage/binding/inversor_binding.dart';
+import 'package:virtual_origen_app/content/main/storage/binding/property_binding.dart';
+import 'package:virtual_origen_app/content/main/storage/binding/smart_device_binding.dart';
+import 'package:virtual_origen_app/content/main/storage/binding/user_binding.dart';
+import 'package:virtual_origen_app/content/main/storage/binding/weather_binding.dart';
 import 'package:virtual_origen_app/content/policy/pages/policy_page.dart';
 import 'package:virtual_origen_app/routes/app_routes.dart';
 
@@ -34,7 +45,39 @@ class AppPages {
     ),
     GetPage(
       name: Routes.HOME.path,
-      page: () => const Scaffold(),
+      page: () => const HomePage(),
+      binding: HomeBinding(),
+    ),
+    GetPage(
+      name: Routes.PROPERTY.path,
+      page: () => const PropertyPage(),
+      binding: PropertyBinding(),
+      transition: Transition.noTransition,
+      transitionDuration: Duration.zero,
+    ),
+    GetPage(
+      name: Routes.SMART_DEVICE.path,
+      page: () => const SmartDevicePage(),
+      binding: SmartDeviceBinding(),
+    ),
+    GetPage(
+      name: Routes.INVERSOR.path,
+      page: () => const InversorPage(),
+      binding: InversorBinding(),
+      transition: Transition.noTransition,
+      transitionDuration: Duration.zero,
+    ),
+    GetPage(
+      name: Routes.WEATHER.path,
+      page: () => const WeatherPage(),
+      binding: WeatherBinding(),
+      transition: Transition.noTransition,
+      transitionDuration: Duration.zero,
+    ),
+    GetPage(
+      name: Routes.USER.path,
+      page: () => const UserPage(),
+      binding: UserBinding(),
     ),
     GetPage(
       name: Routes.PRIVACY_POLICY.path,

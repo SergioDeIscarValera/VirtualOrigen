@@ -2,7 +2,7 @@ import 'package:get/get.dart';
 
 class FormValidator extends GetxService {
   String? isValidName(String? text) {
-    if (text == null || text.isEmpty || text.length < 3) {
+    if (text == null || text.isEmpty || text.length < 3 || text.length > 75) {
       return "name_error".tr;
     }
     return null;
@@ -22,6 +22,13 @@ class FormValidator extends GetxService {
   String? isValidConfirmPass(String? text, String? pass) {
     if (text == null || text != pass) {
       return "confirm_pass_error".tr;
+    }
+    return null;
+  }
+
+  String? isValidText(String? text, int length) {
+    if (text == null || text.isEmpty || text.length > length) {
+      return "text_error".tr;
     }
     return null;
   }

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:virtual_origen_app/content/auth/storage/controller/auth_controller.dart';
 import 'package:virtual_origen_app/content/auth/widgets/external_login_privider_button.dart';

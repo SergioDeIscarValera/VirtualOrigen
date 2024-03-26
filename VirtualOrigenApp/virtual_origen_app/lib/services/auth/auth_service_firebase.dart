@@ -65,7 +65,13 @@ class AuthServiceFirebase implements IAuthService {
   String getEmail() => FirebaseAuth.instance.currentUser?.email ?? '';
 
   @override
-  String getName() => FirebaseAuth.instance.currentUser?.displayName ?? '';
+  String getName() {
+    var name = FirebaseAuth.instance.currentUser?.displayName;
+    if (name == null || name.isEmpty) {
+      return getEmail().split("@").first;
+    }
+    return name;
+  }
 
   @override
   String getProfileImage() => FirebaseAuth.instance.currentUser?.photoURL ?? '';

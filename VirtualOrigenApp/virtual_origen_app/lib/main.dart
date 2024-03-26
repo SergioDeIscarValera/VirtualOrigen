@@ -9,6 +9,9 @@ import 'package:virtual_origen_app/routes/app_pages.dart';
 import 'package:virtual_origen_app/routes/app_routes.dart';
 import 'package:virtual_origen_app/services/auth/auth_service_firebase.dart';
 import 'package:virtual_origen_app/services/auth/interface_auth_service.dart';
+import 'package:virtual_origen_app/services/localities/interface_locaties.dart';
+import 'package:virtual_origen_app/services/localities/locaties_google_maps.dart';
+import 'package:virtual_origen_app/services/secrets.dart';
 import 'package:virtual_origen_app/services/storage/interface_local_storage.dart';
 import 'package:virtual_origen_app/services/storage/local_storage_get.dart';
 import 'package:virtual_origen_app/themes/thrmes.dart';
@@ -57,6 +60,9 @@ class MyApp extends StatelessWidget {
         );
         Get.put(FormValidator(), permanent: true);
         Get.put(MySnackbar(), permanent: true);
+
+        Get.put(Secrets(), permanent: true);
+        Get.put<ILocaties>(LocatiesGoogleMaps(), permanent: true);
       }),
 
       initialRoute: Routes.FIRST_TIME.path,
