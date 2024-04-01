@@ -10,8 +10,7 @@ public class OpenWeatherRest
     private OpenWeatherRest()
     {
         _httpClient = MyHttpClient.Instance;
-        _apiKey = "159615abd47311b634124524fcbd977a";
-        //_apiKey = Environment.GetEnvironmentVariable("OPEN_WEATHER_API_KEY") ?? throw new("OPEN_WEATHER_API_KEY");
+        _apiKey = Environment.GetEnvironmentVariable("OPEN_WEATHER_API_KEY") ?? throw new("OPEN_WEATHER_API_KEY");
     }
 
     private static OpenWeatherRest? _instance;
@@ -25,7 +24,7 @@ public class OpenWeatherRest
         }
     }
 
-    public async Task<OpenWeatherDto?> GetWeatherAsync(double lat, double lon)
+    public async Task<OpenWeatherDto?> GetWeatherAsync(string lat, string lon)
     {
         var request = $"forecast?lat={lat}&lon={lon}&units=metric&lang=es";
         return await _httpClient.GetAsync<OpenWeatherDto>($"{request}&appid={_apiKey}");

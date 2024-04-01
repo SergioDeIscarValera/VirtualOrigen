@@ -21,7 +21,7 @@ var weathers = new Dictionary<string, List<PropertyHourWeather>>();
 var now = DateTime.Now;
 foreach (var property in properties)
 {
-    var location = property.Location.Split(':').Select(x => double.Parse(x.Replace(".", ","))).ToArray();
+    var location = property.Location.Split(':');
     var openWeatherDto = await openWeatherRest.GetWeatherAsync(location[0], location[1]);
     weathers[property.Id] = weatherMapper.MapFromOpenWeather(openWeatherDto).Where(x => now.Day == x.DateTimeEndDate.Day && now.Month == x.DateTimeEndDate.Month).ToList();
 }
