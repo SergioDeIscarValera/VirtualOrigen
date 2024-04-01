@@ -5,7 +5,9 @@ VisualStudioVersion = 17.9.34607.119
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VirtualOrigenServer", "VirtualOrigenServer\VirtualOrigenServer.csproj", "{3B855D74-2D10-49D1-B4DC-58D647CE8492}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PropertyWeatherService", "PropertyWeatherService\PropertyWeatherService.csproj", "{7229B5AE-7A7F-47AD-BFB5-B37FF3BD3975}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PropertyWeatherService", "PropertyWeatherService\PropertyWeatherService.csproj", "{7229B5AE-7A7F-47AD-BFB5-B37FF3BD3975}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InversorNowService", "InversorNowService\InversorNowService.csproj", "{FB0D6320-6C8D-49D1-85D8-D6DB95EA9D54}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{7229B5AE-7A7F-47AD-BFB5-B37FF3BD3975}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7229B5AE-7A7F-47AD-BFB5-B37FF3BD3975}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7229B5AE-7A7F-47AD-BFB5-B37FF3BD3975}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FB0D6320-6C8D-49D1-85D8-D6DB95EA9D54}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FB0D6320-6C8D-49D1-85D8-D6DB95EA9D54}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FB0D6320-6C8D-49D1-85D8-D6DB95EA9D54}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FB0D6320-6C8D-49D1-85D8-D6DB95EA9D54}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
