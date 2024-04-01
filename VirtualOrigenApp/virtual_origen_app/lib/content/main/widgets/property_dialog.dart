@@ -37,29 +37,24 @@ class PropertyDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     var validator = Get.find<FormValidator>();
     return ResponsiveLayout(
-      mobile: PropertyDialogBody(
-        nameController: nameController,
-        color: color,
-        onChangedColor: onChangedColor,
-        onSelectLocation: onSelectLocation,
-        selectedLocation: selectedLocation,
-        validator: validator,
-        onSave: onSave,
-        isEditing: isEditing,
-        onDelete: onDelete,
+      mobile: Material(
+        type: MaterialType.transparency,
+        child: Container(
+          margin: const EdgeInsets.all(10),
+          child: PropertyDialogBody(
+            nameController: nameController,
+            color: color,
+            onChangedColor: onChangedColor,
+            onSelectLocation: onSelectLocation,
+            selectedLocation: selectedLocation,
+            validator: validator,
+            onSave: onSave,
+            isEditing: isEditing,
+            onDelete: onDelete,
+          ),
+        ),
       ),
-      tablet: PropertyDialogBody(
-        nameController: nameController,
-        color: color,
-        onChangedColor: onChangedColor,
-        onSelectLocation: onSelectLocation,
-        selectedLocation: selectedLocation,
-        validator: validator,
-        onSave: onSave,
-        isEditing: isEditing,
-        onDelete: onDelete,
-      ),
-      desktop: WrapInMid(
+      tablet: Dialog(
         child: PropertyDialogBody(
           nameController: nameController,
           color: color,
@@ -70,6 +65,21 @@ class PropertyDialog extends StatelessWidget {
           onSave: onSave,
           isEditing: isEditing,
           onDelete: onDelete,
+        ),
+      ),
+      desktop: Dialog(
+        child: WrapInMid(
+          child: PropertyDialogBody(
+            nameController: nameController,
+            color: color,
+            onChangedColor: onChangedColor,
+            onSelectLocation: onSelectLocation,
+            selectedLocation: selectedLocation,
+            validator: validator,
+            onSave: onSave,
+            isEditing: isEditing,
+            onDelete: onDelete,
+          ),
         ),
       ),
     );
@@ -102,103 +112,101 @@ class PropertyDialogBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final formKey = GlobalKey<FormState>();
-    return Dialog(
-      child: Container(
-        padding: const EdgeInsets.all(15),
-        decoration: BoxDecoration(
-          color: MyColors.CURRENT.color,
-          borderRadius: BorderRadius.circular(24),
-        ),
-        child: Form(
-          key: formKey,
-          child: Column(
-            children: [
-              Text(
-                isEditing ? "edit_property".tr : "new_property".tr,
-                style: MyTextStyles.h2.textStyle.copyWith(
-                  color: MyColors.CONTRARY.color,
+    return Container(
+      padding: const EdgeInsets.all(15),
+      decoration: BoxDecoration(
+        color: MyColors.CURRENT.color,
+        borderRadius: BorderRadius.circular(24),
+      ),
+      child: Form(
+        key: formKey,
+        child: Column(
+          children: [
+            Text(
+              isEditing ? "edit_property".tr : "new_property".tr,
+              style: MyTextStyles.h2.textStyle.copyWith(
+                color: MyColors.CONTRARY.color,
+              ),
+            ),
+            const SizedBox(height: 20),
+            MyTextForm(
+              controller: nameController,
+              icon: Icons.title,
+              label: "property_name".tr,
+              color: MyColors.CONTRARY,
+              validator: (text) => validator.isValidText(text, 150),
+            ),
+            const SizedBox(height: 20),
+            Obx(
+              () => WrapInMid(
+                child: ColorDropdown(
+                  onChanged: onChangedColor,
+                  value: color.value,
                 ),
               ),
-              const SizedBox(height: 20),
-              MyTextForm(
-                controller: nameController,
-                icon: Icons.title,
-                label: "property_name".tr,
-                color: MyColors.CONTRARY,
-                validator: (text) => validator.isValidText(text, 150),
-              ),
-              const SizedBox(height: 20),
-              Obx(
-                () => WrapInMid(
-                  child: ColorDropdown(
-                    onChanged: onChangedColor,
-                    value: color.value,
+            ),
+            const SizedBox(height: 20),
+            Expanded(
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(24),
+                child: GoogleMap(
+                  initialCameraPosition: CameraPosition(
+                    target:
+                        LatLng(selectedLocation.key, selectedLocation.value),
+                    zoom: 15,
                   ),
-                ),
-              ),
-              const SizedBox(height: 20),
-              Expanded(
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(24),
-                  child: GoogleMap(
-                    initialCameraPosition: CameraPosition(
-                      target:
+                  markers: {
+                    Marker(
+                      markerId: const MarkerId('m1'),
+                      position:
                           LatLng(selectedLocation.key, selectedLocation.value),
-                      zoom: 15,
+                      draggable: true,
+                      onDragEnd: (LatLng position) {
+                        // Actualizar la posición del marcador
+                        onSelectLocation(
+                            Pair(position.latitude, position.longitude));
+                      },
                     ),
-                    markers: {
-                      Marker(
-                        markerId: const MarkerId('m1'),
-                        position: LatLng(
-                            selectedLocation.key, selectedLocation.value),
-                        draggable: true,
-                        onDragEnd: (LatLng position) {
-                          // Actualizar la posición del marcador
-                          onSelectLocation(
-                              Pair(position.latitude, position.longitude));
-                        },
-                      ),
-                    },
-                  ),
+                  },
                 ),
               ),
-              const SizedBox(height: 20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  RoundedButton(
-                    onPressed: () {
+            ),
+            const SizedBox(height: 20),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                RoundedButton(
+                  onPressed: () {
+                    Get.back();
+                  },
+                  color: MyColors.WARNING,
+                  textColor: MyColors.LIGHT,
+                  text: "cancel".tr,
+                  icon: Icons.cancel,
+                ),
+                RoundedButton(
+                  onPressed: () {
+                    if (formKey.currentState!.validate()) {
                       Get.back();
-                    },
-                    color: MyColors.WARNING,
-                    textColor: MyColors.LIGHT,
-                    text: "cancel".tr,
-                    icon: Icons.cancel,
-                  ),
+                      onSave();
+                    }
+                  },
+                  color: MyColors.PRIMARY,
+                  textColor: MyColors.LIGHT,
+                  text: "save".tr,
+                  icon: Icons.save,
+                ),
+                if (isEditing && onDelete != null)
                   RoundedButton(
-                    onPressed: () {
-                      if (formKey.currentState!.validate()) {
-                        Get.back();
-                        onSave();
-                      }
-                    },
-                    color: MyColors.PRIMARY,
+                    onPressed: onDelete!,
+                    color: MyColors.DANGER,
                     textColor: MyColors.LIGHT,
-                    text: "save".tr,
-                    icon: Icons.save,
+                    text: "delete".tr,
+                    icon: Icons.delete,
                   ),
-                  if (isEditing && onDelete != null)
-                    RoundedButton(
-                      onPressed: onDelete!,
-                      color: MyColors.DANGER,
-                      textColor: MyColors.LIGHT,
-                      text: "delete".tr,
-                      icon: Icons.delete,
-                    ),
-                ],
-              )
-            ],
-          ),
+              ],
+            )
+          ],
         ),
       ),
     );

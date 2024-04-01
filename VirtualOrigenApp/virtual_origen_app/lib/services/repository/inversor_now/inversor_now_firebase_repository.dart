@@ -25,15 +25,6 @@ class InversorNowFirebaseRepository
   }
 
   @override
-  Map<String, dynamic> toJson(InversorNow entity) {
-    return {
-      "battery": entity.battery,
-      "consumption": entity.consumption,
-      "gain": entity.gain,
-    };
-  }
-
-  @override
   void addListener(
       {required String idc, required Function(List<InversorNow>) listener}) {
     listenerStream = FirebaseFirestore.instance

@@ -10,6 +10,7 @@ class MyTextForm extends StatelessWidget {
     required this.label,
     required this.color,
     this.obscureText = false,
+    this.editable = true,
     this.validator,
   }) : super(key: key);
 
@@ -18,6 +19,7 @@ class MyTextForm extends StatelessWidget {
   final String label;
   final MyColors color;
   final bool obscureText;
+  final bool editable;
   final String? Function(String?)? validator;
 
   @override
@@ -26,6 +28,7 @@ class MyTextForm extends StatelessWidget {
       controller: controller,
       obscureText: obscureText,
       validator: validator,
+      enabled: editable,
       decoration: InputDecoration(
         prefixIcon: Icon(
           icon,

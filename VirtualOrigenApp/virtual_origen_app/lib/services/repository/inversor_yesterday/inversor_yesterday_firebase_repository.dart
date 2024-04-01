@@ -22,15 +22,4 @@ class InversorYerserdayFirebaseRepository
       gain: json["gain"],
     );
   }
-
-  @override
-  Map<String, dynamic> toJson(InversorYerserday entity) {
-    return {
-      "propertyId": entity.propertyId,
-      "dateTime": entity.dateTime.toString(),
-      "battery": entity.battery,
-      "consumption": entity.consumption,
-      "gain": entity.gain,
-    };
-  }
 }

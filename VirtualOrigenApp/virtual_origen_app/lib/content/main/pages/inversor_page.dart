@@ -1,17 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart';
 import 'package:virtual_origen_app/content/main/storage/controller/inversor_controller.dart';
-import 'package:virtual_origen_app/content/main/widgets/user_header.dart';
 import 'package:virtual_origen_app/models/property.dart';
 import 'package:virtual_origen_app/services/auth/interface_auth_service.dart';
 import 'package:virtual_origen_app/themes/colors.dart';
 import 'package:virtual_origen_app/themes/styles/my_text_styles.dart';
 import 'package:virtual_origen_app/widgets/my_scaffold.dart';
-import 'package:virtual_origen_app/widgets/responsive_layout.dart';
-
-import '../widgets/inversor_chart.dart';
+import 'package:virtual_origen_app/content/main/widgets/inversor_chart.dart';
+import 'package:virtual_origen_app/content/main/widgets/property_header.dart';
 
 class InversorPage extends StatelessWidget {
   const InversorPage({Key? key}) : super(key: key);
@@ -24,11 +20,7 @@ class InversorPage extends StatelessWidget {
     controller.setPropertySelected(propertySelected);
     return MyScaffold(
       backgroundColor: MyColors.CURRENT,
-      body: ResponsiveLayout(
-        desktop: InversorBody(controller: controller, authService: authService),
-        tablet: InversorBody(controller: controller, authService: authService),
-        mobile: InversorBody(controller: controller, authService: authService),
-      ),
+      body: InversorBody(controller: controller, authService: authService),
     );
   }
 }
@@ -45,18 +37,6 @@ class InversorBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final DateFormat formatter = DateFormat('dd hh:mm');
-    // final displayCount = context.width < 500
-    //     ? 4 > controller.batteryData.length
-    //         ? controller.batteryData.length
-    //         : 4
-    //     : context.width < 1100
-    //         ? 8 > controller.batteryData.length
-    //             ? controller.batteryData.length
-    //             : 8
-    //         : 12 > controller.batteryData.length
-    //             ? controller.batteryData.length
-    //             : 12;
     final displayCount =
         context.width * 25 ~/ 2560 > controller.batteryData.length
             ? controller.batteryData.length
@@ -64,39 +44,9 @@ class InversorBody extends StatelessWidget {
     return Expanded(
       child: Column(
         children: [
-          Stack(
-            clipBehavior: Clip.none,
-            children: [
-              Obx(
-                () => Container(
-                  decoration: BoxDecoration(
-                    color: controller.propertySelected.value.color.color,
-                    borderRadius: const BorderRadius.vertical(
-                      bottom: Radius.circular(24),
-                    ),
-                  ),
-                  padding: const EdgeInsets.only(
-                    top: 77,
-                    bottom: 2,
-                    left: 10,
-                    right: 10,
-                  ),
-                  child: Center(
-                    child: Text(
-                      controller.propertySelected.value.name,
-                      style: MyTextStyles.h1.textStyle.copyWith(
-                        color: MyColors.LIGHT.color,
-                      ),
-                    ),
-                  ),
-                ).animate().fade().slide(),
-              ),
-              UserHeader(
-                userName: authService.getName(),
-                userImage: authService.getProfileImage(),
-                haveNotification: true,
-              ),
-            ],
+          PropertyHeader(
+            propertySelected: controller.propertySelected,
+            authService: authService,
           ),
           Expanded(
             child: ListView(
@@ -110,17 +60,19 @@ class InversorBody extends StatelessWidget {
                   padding: const EdgeInsets.all(15),
                   child: Obx(
                     () => Row(
+                      mainAxisSize: MainAxisSize.max,
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
                         Flexible(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
+                          child: Wrap(
+                            crossAxisAlignment: WrapCrossAlignment.center,
+                            runAlignment: WrapAlignment.center,
+                            spacing: 10,
                             children: [
                               Icon(
                                 Icons.battery_saver,
                                 color: MyColors.LIGHT.color,
                               ),
-                              const SizedBox(width: 10),
                               Tooltip(
                                 message: "consumption_reason".tr,
                                 child: Text(
@@ -137,6 +89,7 @@ class InversorBody extends StatelessWidget {
                         Flexible(
                           flex: 3,
                           child: Row(
+                            mainAxisSize: MainAxisSize.min,
                             children: [
                               Expanded(
                                 child: LinearProgressIndicator(
@@ -167,14 +120,15 @@ class InversorBody extends StatelessWidget {
                           ),
                         ),
                         Flexible(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
+                          child: Wrap(
+                            crossAxisAlignment: WrapCrossAlignment.center,
+                            runAlignment: WrapAlignment.center,
+                            spacing: 10,
                             children: [
                               Icon(
                                 Icons.battery_charging_full,
                                 color: MyColors.LIGHT.color,
                               ),
-                              const SizedBox(width: 10),
                               Tooltip(
                                 message: "gain_reason".tr,
                                 child: Text(
@@ -209,6 +163,41 @@ class InversorBody extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(height: 10),
+                      Wrap(
+                        spacing: 10,
+                        children: [
+                          for (var i = 0; i < 3; i++)
+                            Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Container(
+                                  width: 20,
+                                  height: 20,
+                                  decoration: BoxDecoration(
+                                    color: i == 0
+                                        ? MyColors.LIGHT.color
+                                        : i == 1
+                                            ? MyColors.SUCCESS.color
+                                            : MyColors.ORANGE.color,
+                                    shape: BoxShape.circle,
+                                  ),
+                                ),
+                                const SizedBox(width: 5),
+                                Text(
+                                  i == 0
+                                      ? "battery_title".tr
+                                      : i == 1
+                                          ? "gain_title".tr
+                                          : "consumption_title".tr,
+                                  style: MyTextStyles.p.textStyle.copyWith(
+                                    color: MyColors.LIGHT.color,
+                                  ),
+                                ),
+                              ],
+                            ),
+                        ],
+                      ),
+                      const SizedBox(height: 10),
                       SizedBox(
                         width: double.infinity,
                         height: 300,
@@ -222,7 +211,6 @@ class InversorBody extends StatelessWidget {
                                 .toList(),
                             leftTitle: "chart_battery_title".tr,
                             bottomTitle: "chart_time_title".tr,
-                            formatter: formatter,
                             displayCount: displayCount,
                             offset: controller.offsetBatteryChart.value,
                           ),

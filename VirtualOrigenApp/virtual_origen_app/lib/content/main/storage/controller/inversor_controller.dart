@@ -1,6 +1,5 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:get/get.dart';
-import 'package:get/get_rx/get_rx.dart';
 import 'package:virtual_origen_app/models/inversor_now.dart';
 import 'package:virtual_origen_app/models/inversor_yesterday.dart';
 import 'package:virtual_origen_app/models/property.dart';
@@ -13,7 +12,7 @@ class InversorController extends GetxController {
   late final InversorYerserdayFirebaseRepository _inversorYerserdayRepository;
   late final IAuthService _authService;
 
-  Rx<Property> propertySelected = Property.defaultConstructor().obs;
+  final Rx<Property> propertySelected = Property.defaultConstructor().obs;
   Rx<InversorNow> inversorNow = InversorNow.defaultConstructor().obs;
   RxList<InversorYerserday> inversorYerserday = <InversorYerserday>[].obs;
   RxList<FlSpot> batteryData = <FlSpot>[].obs;
@@ -63,106 +62,12 @@ class InversorController extends GetxController {
   }
 
   void _setUpInversorYerserday() {
-    // _inversorYerserdayRepository.addListener(
-    //   idc: _authService.getUid(),
-    //   listener: (value) {
-    //     inversorYerserday.value = value;
-    //   },
-    // );
-    var datetime = DateTime.parse('2000-01-01T00:00:00');
-    inversorYerserday.value = [
-      InversorYerserday(
-        propertyId: '1',
-        battery: 80,
-        consumption: 1200,
-        gain: 1500,
-        dateTime: datetime,
-      ),
-      InversorYerserday(
-        propertyId: '2',
-        battery: 79,
-        consumption: 1200,
-        gain: 1100,
-        dateTime: datetime.subtract(const Duration(minutes: 15)),
-      ),
-      InversorYerserday(
-        propertyId: '3',
-        battery: 78,
-        consumption: 2200,
-        gain: 1000,
-        dateTime: datetime.subtract(const Duration(minutes: 30)),
-      ),
-      InversorYerserday(
-        propertyId: '4',
-        battery: 77,
-        consumption: 1200,
-        gain: 900,
-        dateTime: datetime.subtract(const Duration(minutes: 45)),
-      ),
-      InversorYerserday(
-        propertyId: '5',
-        battery: 76,
-        consumption: 1260,
-        gain: 1167,
-        dateTime: datetime.subtract(const Duration(minutes: 60)),
-      ),
-      InversorYerserday(
-        propertyId: '6',
-        battery: 75,
-        consumption: 2205,
-        gain: 1006,
-        dateTime: datetime.subtract(const Duration(minutes: 75)),
-      ),
-      InversorYerserday(
-        propertyId: '7',
-        battery: 74,
-        consumption: 1234,
-        gain: 905,
-        dateTime: datetime.subtract(const Duration(minutes: 90)),
-      ),
-      InversorYerserday(
-        propertyId: '8',
-        battery: 73,
-        consumption: 1267,
-        gain: 1121,
-        dateTime: datetime.subtract(const Duration(minutes: 105)),
-      ),
-      InversorYerserday(
-        propertyId: '9',
-        battery: 72,
-        consumption: 2245,
-        gain: 1014,
-        dateTime: datetime.subtract(const Duration(minutes: 120)),
-      ),
-      InversorYerserday(
-        propertyId: '10',
-        battery: 71,
-        consumption: 1200,
-        gain: 900,
-        dateTime: datetime.subtract(const Duration(minutes: 135)),
-      ),
-      InversorYerserday(
-        propertyId: '11',
-        battery: 70,
-        consumption: 1200,
-        gain: 1100,
-        dateTime: datetime.subtract(const Duration(minutes: 150)),
-      ),
-      InversorYerserday(
-        propertyId: '12',
-        battery: 69,
-        consumption: 2200,
-        gain: 1000,
-        dateTime: datetime.subtract(const Duration(minutes: 165)),
-      ),
-      InversorYerserday(
-        propertyId: '13',
-        battery: 68,
-        consumption: 1200,
-        gain: 900,
-        dateTime: datetime.subtract(const Duration(minutes: 180)),
-      ),
-    ];
+    _inversorYerserdayRepository.addListener(
+      idc: _authService.getUid(),
+      listener: (value) {
+        inversorYerserday.value = value;
+      },
+    );
   }
 
   void _setBatteryData(List<InversorYerserday> value) {

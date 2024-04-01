@@ -9,7 +9,6 @@ abstract class GenFirebaseRepositoryOnlyGet<T, ID>
   String get idName;
 
   T fromJson(Map<String, dynamic> json);
-  Map<String, dynamic> toJson(T entity);
 
   StreamSubscription<DocumentSnapshot>? listenerStream;
 

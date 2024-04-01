@@ -4,18 +4,21 @@ import 'package:virtual_origen_app/content/main/widgets/property_dialog.dart';
 import 'package:virtual_origen_app/models/inversor_now.dart';
 import 'package:virtual_origen_app/models/pair.dart';
 import 'package:virtual_origen_app/models/property.dart';
+import 'package:virtual_origen_app/models/property_day_weather.dart';
 import 'package:virtual_origen_app/routes/app_routes.dart';
 import 'package:virtual_origen_app/services/auth/interface_auth_service.dart';
 import 'package:virtual_origen_app/services/repository/inversor_now/inversor_now_firebase_repository.dart';
 import 'package:virtual_origen_app/services/repository/property/interface_property_repository.dart';
+import 'package:virtual_origen_app/services/repository/property_day_weather/property_day_weather_firebase_repository.dart';
 import 'package:virtual_origen_app/themes/colors.dart';
 import 'package:virtual_origen_app/utils/my_snackbar.dart';
 
 class HomeController extends GetxController {
-  late IPropertyRepository _propertyRepository;
-  late InversorNowFirebaseRepository _inversorNowRepository;
-  late IAuthService _authService;
-  late MySnackbar _mySnackbar;
+  late final IPropertyRepository _propertyRepository;
+  late final InversorNowFirebaseRepository _inversorNowRepository;
+  late final PropertyDayWeatherFirebaseRepository _propertyDayWeatherRepository;
+  late final IAuthService _authService;
+  late final MySnackbar _mySnackbar;
 
   final RxList<Property> properties = <Property>[].obs;
 
@@ -30,6 +33,8 @@ class HomeController extends GetxController {
     _inversorNowRepository = Get.find<InversorNowFirebaseRepository>();
     _propertyRepository = Get.find<IPropertyRepository>();
     _mySnackbar = Get.find<MySnackbar>();
+    _propertyDayWeatherRepository =
+        Get.find<PropertyDayWeatherFirebaseRepository>();
     _propertyRepository.addListener(
       idc: _authService.getUid(),
       listener: (properties) {
@@ -146,5 +151,14 @@ class HomeController extends GetxController {
     propertyNameController.clear();
     color.value = MyColors.PRIMARY;
     location.value = Pair(40.4176833585554, -3.7038147983551027);
+  }
+
+  Future<PropertyHourWeather> getWeatherNow({required String id}) async {
+    var now = DateTime.now();
+    return await _propertyDayWeatherRepository.findById(
+          id: now,
+          idc: id,
+        ) ??
+        PropertyHourWeather.defaultConstructor();
   }
 }

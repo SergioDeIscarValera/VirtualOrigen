@@ -70,6 +70,8 @@ class HomeBody extends StatelessWidget {
                               property: property,
                               inversorNow:
                                   controller.getInversorNow(id: property.id),
+                              weatherNow:
+                                  controller.getWeatherNow(id: property.id),
                               onTap: controller.navigateProperty,
                               onLongPress: controller.editPropertyDialog,
                             ),
@@ -79,6 +81,8 @@ class HomeBody extends StatelessWidget {
                                 property: property,
                                 inversorNow:
                                     controller.getInversorNow(id: property.id),
+                                weatherNow:
+                                    controller.getWeatherNow(id: property.id),
                                 onTap: controller.navigateProperty,
                                 onLongPress: controller.editPropertyDialog,
                               ),
@@ -87,6 +91,8 @@ class HomeBody extends StatelessWidget {
                               property: property,
                               inversorNow:
                                   controller.getInversorNow(id: property.id),
+                              weatherNow:
+                                  controller.getWeatherNow(id: property.id),
                               onTap: controller.navigateProperty,
                               onLongPress: controller.editPropertyDialog,
                             ),

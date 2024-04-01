@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:virtual_origen_app/models/inversor_now.dart';
 import 'package:virtual_origen_app/models/property.dart';
+import 'package:virtual_origen_app/models/property_day_weather.dart';
 import 'package:virtual_origen_app/themes/colors.dart';
 import 'package:virtual_origen_app/themes/styles/my_text_styles.dart';
 
@@ -11,12 +12,14 @@ class PropertyLongCard extends StatelessWidget {
     Key? key,
     required this.property,
     required this.inversorNow,
+    required this.weatherNow,
     required this.onTap,
     required this.onLongPress,
   }) : super(key: key);
 
   final Property property;
   final Future<InversorNow> inversorNow;
+  final Future<PropertyHourWeather> weatherNow;
   final Function(Property) onTap;
   final Function(Property) onLongPress;
 
@@ -99,12 +102,21 @@ class PropertyLongCard extends StatelessWidget {
                   Container(
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      color: MyColors.LIGHT.color,
+                      color: MyColors.LIGHT.color.withOpacity(0.6),
                     ),
                     padding: const EdgeInsets.all(10),
-                    child: Image.asset(
-                      "images/weathers/sunny.png",
-                      width: 100,
+                    child: FutureBuilder(
+                      future: weatherNow,
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const CircularProgressIndicator();
+                        }
+                        return Image.network(
+                          snapshot.data!.weatherIconUrl,
+                          width: 100,
+                        );
+                      },
                     ),
                   ),
                   Column(
@@ -118,12 +130,21 @@ class PropertyLongCard extends StatelessWidget {
                             color: MyColors.LIGHT.color,
                           ),
                           const SizedBox(width: 10),
-                          Text(
-                            "0 º",
-                            style: MyTextStyles.p.textStyle.copyWith(
-                              color: MyColors.LIGHT.color,
-                              fontSize: 22,
-                            ),
+                          FutureBuilder(
+                            future: weatherNow,
+                            builder: (context, snapshot) {
+                              if (snapshot.connectionState ==
+                                  ConnectionState.waiting) {
+                                return const CircularProgressIndicator();
+                              }
+                              return Text(
+                                "${snapshot.data!.temperature} °C",
+                                style: MyTextStyles.p.textStyle.copyWith(
+                                  color: MyColors.LIGHT.color,
+                                  fontSize: 22,
+                                ),
+                              );
+                            },
                           ),
                         ],
                       ),
@@ -135,12 +156,21 @@ class PropertyLongCard extends StatelessWidget {
                             color: MyColors.LIGHT.color,
                           ),
                           const SizedBox(width: 10),
-                          Text(
-                            "0 %",
-                            style: MyTextStyles.p.textStyle.copyWith(
-                              color: MyColors.LIGHT.color,
-                              fontSize: 22,
-                            ),
+                          FutureBuilder(
+                            future: weatherNow,
+                            builder: (context, snapshot) {
+                              if (snapshot.connectionState ==
+                                  ConnectionState.waiting) {
+                                return const CircularProgressIndicator();
+                              }
+                              return Text(
+                                "${snapshot.data!.rainProbability} %",
+                                style: MyTextStyles.p.textStyle.copyWith(
+                                  color: MyColors.LIGHT.color,
+                                  fontSize: 22,
+                                ),
+                              );
+                            },
                           ),
                         ],
                       ),

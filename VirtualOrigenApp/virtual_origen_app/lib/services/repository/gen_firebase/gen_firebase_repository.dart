@@ -7,6 +7,8 @@ import 'package:virtual_origen_app/services/repository/interface_listener_reposi
 abstract class GenFirebaseRepository<T, ID>
     extends GenFirebaseRepositoryOnlyGet<T, ID>
     implements IListenerRepository<T, ID, String> {
+  Map<String, dynamic> toJson(T entity);
+
   @override
   Future<void> deleteAll({required String idc}) async {
     var docRef = await getRefAndSnapshot(idc: idc);

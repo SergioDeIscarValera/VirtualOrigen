@@ -6,6 +6,7 @@ import 'package:virtual_origen_app/services/repository/invitation/interface_invi
 import 'package:virtual_origen_app/services/repository/invitation/invitation_firebase_repository.dart';
 import 'package:virtual_origen_app/services/repository/property/interface_property_repository.dart';
 import 'package:virtual_origen_app/services/repository/property/property_firebase_repository.dart';
+import 'package:virtual_origen_app/services/repository/property_day_weather/property_day_weather_firebase_repository.dart';
 import 'package:virtual_origen_app/services/repository/smart_device/interface_smart_device_repository.dart';
 import 'package:virtual_origen_app/services/repository/smart_device/smart_device_firebase_repository.dart';
 
@@ -21,5 +22,6 @@ class HomeBinding extends Bindings {
         permanent: true);
     Get.put(InversorNowFirebaseRepository(), permanent: true);
     Get.put(InversorYerserdayFirebaseRepository(), permanent: true);
+    Get.put(PropertyDayWeatherFirebaseRepository(), permanent: true);
   }
 }

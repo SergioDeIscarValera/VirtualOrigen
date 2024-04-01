@@ -10,11 +10,13 @@ class UserHeader extends StatelessWidget {
     required this.userName,
     required this.userImage,
     this.haveNotification = false,
+    this.haveProfile = true,
   }) : super(key: key);
 
   final String userName;
   final String userImage;
   final bool haveNotification;
+  final bool haveProfile;
 
   @override
   Widget build(BuildContext context) {
@@ -46,49 +48,53 @@ class UserHeader extends StatelessWidget {
               ),
             ),
           ),
-          Stack(
-            children: [
-              MouseRegion(
-                cursor: SystemMouseCursors.click,
-                child: GestureDetector(
-                  onTap: () {
-                    Get.toNamed(Routes.USER.path);
-                  },
-                  child: CircleAvatar(
-                    radius: 25,
-                    backgroundColor: MyColors.CONTRARY.color,
-                    backgroundImage: NetworkImage(userImage),
-                  ),
-                ),
-              ),
-              if (haveNotification)
-                Positioned(
-                  right: -3,
-                  top: -3,
-                  child: Container(
-                    width: 25,
-                    height: 25,
-                    decoration: BoxDecoration(
-                      color: MyColors.PRIMARY.color,
-                      shape: BoxShape.circle,
+          if (haveProfile)
+            Stack(
+              children: [
+                MouseRegion(
+                  cursor: SystemMouseCursors.click,
+                  child: GestureDetector(
+                    onTap: () {
+                      Get.toNamed(Routes.USER.path);
+                    },
+                    child: Hero(
+                      tag: "user_image",
+                      child: CircleAvatar(
+                        radius: 25,
+                        backgroundColor: MyColors.CONTRARY.color,
+                        backgroundImage: NetworkImage(userImage),
+                      ),
                     ),
                   ),
                 ),
-              if (haveNotification)
-                Positioned(
-                  right: 0,
-                  top: 0,
-                  child: Container(
-                    width: 15,
-                    height: 15,
-                    decoration: BoxDecoration(
-                      color: MyColors.DANGER.color,
-                      shape: BoxShape.circle,
+                if (haveNotification)
+                  Positioned(
+                    right: -3,
+                    top: -3,
+                    child: Container(
+                      width: 25,
+                      height: 25,
+                      decoration: BoxDecoration(
+                        color: MyColors.PRIMARY.color,
+                        shape: BoxShape.circle,
+                      ),
                     ),
                   ),
-                ),
-            ],
-          ),
+                if (haveNotification)
+                  Positioned(
+                    right: 0,
+                    top: 0,
+                    child: Container(
+                      width: 15,
+                      height: 15,
+                      decoration: BoxDecoration(
+                        color: MyColors.DANGER.color,
+                        shape: BoxShape.circle,
+                      ),
+                    ),
+                  ),
+              ],
+            ),
         ],
       ),
     );

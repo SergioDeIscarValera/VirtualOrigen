@@ -2,23 +2,28 @@ import 'package:get/get.dart';
 import 'package:virtual_origen_app/content/main/widgets/smart_device_dialog.dart';
 import 'package:virtual_origen_app/models/inversor_now.dart';
 import 'package:virtual_origen_app/models/property.dart';
+import 'package:virtual_origen_app/models/property_day_weather.dart';
 import 'package:virtual_origen_app/models/smart_device.dart';
 import 'package:virtual_origen_app/routes/app_routes.dart';
 import 'package:virtual_origen_app/services/auth/interface_auth_service.dart';
 import 'package:virtual_origen_app/services/repository/inversor_now/inversor_now_firebase_repository.dart';
+import 'package:virtual_origen_app/services/repository/property_day_weather/property_day_weather_firebase_repository.dart';
 import 'package:virtual_origen_app/services/repository/smart_device/interface_smart_device_repository.dart';
 import 'package:virtual_origen_app/utils/my_snackbar.dart';
 import 'package:virtual_origen_app/utils/validators/smart_device_validator.dart';
 
 class PropertyController extends GetxController {
-  late ISmartDeviceRepository _smartDeviceRepository;
-  late InversorNowFirebaseRepository _inversorNowRepository;
-  late IAuthService _authService;
-  late MySnackbar _mySnackbar;
+  late final ISmartDeviceRepository _smartDeviceRepository;
+  late final InversorNowFirebaseRepository _inversorNowRepository;
+  late final IAuthService _authService;
+  late final MySnackbar _mySnackbar;
+  late final PropertyDayWeatherFirebaseRepository _propertyDayWeatherRepository;
 
   Rx<Property> propertySelected = Property.defaultConstructor().obs;
   RxList<SmartDevice> smartDevices = <SmartDevice>[].obs;
   Rx<InversorNow> inversorNow = InversorNow.defaultConstructor().obs;
+  Rx<PropertyHourWeather> weatherNow =
+      PropertyHourWeather.defaultConstructor().obs;
 
   RxBool isMenuOpen = false.obs;
 
@@ -28,12 +33,16 @@ class PropertyController extends GetxController {
     _authService = Get.find<IAuthService>();
     _inversorNowRepository = Get.find<InversorNowFirebaseRepository>();
     _smartDeviceRepository = Get.find<ISmartDeviceRepository>();
+    _propertyDayWeatherRepository =
+        Get.find<PropertyDayWeatherFirebaseRepository>();
     super.onInit();
   }
 
   @override
   void onClose() {
     _smartDeviceRepository.removeListener(idc: _authService.getUid());
+    _propertyDayWeatherRepository.removeListener(
+        idc: propertySelected.value.id);
     super.onClose();
   }
 
@@ -43,6 +52,12 @@ class PropertyController extends GetxController {
       return;
     }
     this.propertySelected.value = propertySelected;
+    _propertyDayWeatherRepository.addHourlyListener(
+      idc: propertySelected.id,
+      listener: (value) {
+        weatherNow.value = value;
+      },
+    );
     _setUpList();
   }
 

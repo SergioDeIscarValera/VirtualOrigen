@@ -11,6 +11,7 @@ import 'package:virtual_origen_app/services/auth/interface_auth_service.dart';
 import 'package:virtual_origen_app/themes/colors.dart';
 import 'package:virtual_origen_app/themes/styles/my_text_styles.dart';
 import 'package:virtual_origen_app/widgets/my_scaffold.dart';
+import 'package:virtual_origen_app/widgets/responsive_layout.dart';
 
 import '../widgets/dropdown_menu_more_info.dart';
 
@@ -104,11 +105,31 @@ class PropertyBody extends StatelessWidget {
                     spacing: 15,
                     children: controller.smartDevices
                         .map(
-                          (smartDevice) => SmartDeviceCard(
-                            smartDevice: smartDevice,
-                            onTap: controller.navigateSmartDeviceDetails,
-                            onLongPress: controller.editSmartDeviceDialog,
-                            onSwitch: controller.changeManualMode,
+                          (smartDevice) => ResponsiveLayout(
+                            mobile: SmartDeviceCard(
+                              smartDevice: smartDevice,
+                              onTap: controller.navigateSmartDeviceDetails,
+                              onLongPress: controller.editSmartDeviceDialog,
+                              onSwitch: controller.changeManualMode,
+                            ),
+                            tablet: SizedBox(
+                              width: context.width * 0.455,
+                              child: SmartDeviceCard(
+                                smartDevice: smartDevice,
+                                onTap: controller.navigateSmartDeviceDetails,
+                                onLongPress: controller.editSmartDeviceDialog,
+                                onSwitch: controller.changeManualMode,
+                              ),
+                            ),
+                            desktop: SizedBox(
+                              width: context.width * 0.3,
+                              child: SmartDeviceCard(
+                                smartDevice: smartDevice,
+                                onTap: controller.navigateSmartDeviceDetails,
+                                onLongPress: controller.editSmartDeviceDialog,
+                                onSwitch: controller.changeManualMode,
+                              ),
+                            ),
                           ),
                         )
                         .toList(),
