@@ -62,7 +62,7 @@ public class InversorMqttService : IMqttService<InversorData>
             Console.WriteLine($" - Topic = {e.ApplicationMessage.Topic}");
             Console.WriteLine($" - Payload = {payload}\n\n");
             var split = payload.Split(',');
-            var inversorData = new InversorData(Double.Parse(split[1]), int.Parse(split[0]), int.Parse(split[2]));
+            var inversorData = new InversorData(int.Parse(split[1]), int.Parse(split[0]), int.Parse(split[2]));
 
             onMessageReceived?.Invoke(inversorData);
         });

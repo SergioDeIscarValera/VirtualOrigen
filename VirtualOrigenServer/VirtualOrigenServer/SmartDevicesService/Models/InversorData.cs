@@ -1,7 +1,7 @@
 ﻿using Google.Cloud.Firestore;
 using Newtonsoft.Json;
 
-namespace InversorNowService.Models;
+namespace SmartDevicesService.Models;
 
 [FirestoreData]
 public class InversorData
@@ -24,6 +24,13 @@ public class InversorData
         Battery = battery;
         Consumption = consumption;
         Gain = gain;
+    }
+
+    public InversorData(Dictionary<string, object> data)
+    {
+        Battery = (int)data["battery"];
+        Consumption = (int)data["consumption"];
+        Gain = (int)data["gain"];
     }
 
     public InversorData()

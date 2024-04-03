@@ -1,10 +1,10 @@
 ﻿using Google.Cloud.Firestore;
-using PropertyWeatherService.Models;
-using PropertyWeatherService.Services.Db;
+using SmartDevicesService.Models;
+using SmartDevicesService.Services.Db;
 
-namespace PropertyWeatherService.Services.Repository.PropertyWeather;
+namespace SmartDevicesService.Services.Repository.PropertyWeather;
 
-internal class PropertyHourWeatherRepositoryFirebase : IPropertyHourWeatherRepository
+public class PropertyHourWeatherRepositoryFirebase : IPropertyHourWeatherRepository
 {
     private readonly CollectionReference collection;
     private readonly string _collectionName = "property_day_weather";
@@ -63,21 +63,6 @@ internal class PropertyHourWeatherRepositoryFirebase : IPropertyHourWeatherRepos
         }
         // Is between x.DateTime and x.DateTimeEnd
         list.RemoveAll(x => id.Ticks >= x.DateTimeDate.Ticks && id.Ticks <= x.DateTimeEndDate.Ticks);
-        var snapshot = await GetSnapshotAsync(idc);
-        if (snapshot == null)
-        {
-            await collection.Document(idc).SetAsync(new Dictionary<string, object>
-            {
-                {_listName, list}
-            });
-        }
-        else
-        {
-            await snapshot.Reference.UpdateAsync(new Dictionary<string, object>
-            {
-                {_listName, list}
-            });
-        }
     }
 
     public async Task<bool> ExistsAsync(DateTime id, string idc)
