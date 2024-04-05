@@ -54,7 +54,7 @@ public class PropertyHourWeather
     public PropertyHourWeather(string dateTime, string dateTimeEnd, double temperature, double temperatureMin, double temperatureMax, int humidity, int clouds, double windSpeed, double rainProbability, string weatherType, string weatherIconUrl)
     {
         DateTimeStart = dateTime;
-        DateTimeEnd = DateTime.Parse(dateTimeEnd).AddHours(-3).ToString("yyyy-MM-dd HH:mm:ss");
+        DateTimeEnd = dateTimeEnd;
         Temperature = temperature;
         TemperatureMin = temperatureMin;
         TemperatureMax = temperatureMax;
@@ -62,7 +62,7 @@ public class PropertyHourWeather
         Clouds = clouds;
         WindSpeed = windSpeed;
         RainProbability = rainProbability;
-        WeatherType = weatherType.ToUpper();
+        WeatherType = weatherType.ToLower();
         WeatherIconUrl = weatherIconUrl;
     }
 

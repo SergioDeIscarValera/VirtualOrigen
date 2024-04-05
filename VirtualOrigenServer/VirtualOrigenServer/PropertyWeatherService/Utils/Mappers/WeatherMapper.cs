@@ -26,7 +26,7 @@ public class WeatherMapper
         {
             propertyHourWeathers.Add(
                 new PropertyHourWeather(
-                    dateTime: item.dt_txt,
+                    dateTime: DateTime.Parse(item.dt_txt).AddHours(-3).ToString("yyyy-MM-dd HH:mm:ss"),
                     dateTimeEnd: item.dt_txt,
                     temperature: item.main.temp,
                     temperatureMin: item.main.temp,
