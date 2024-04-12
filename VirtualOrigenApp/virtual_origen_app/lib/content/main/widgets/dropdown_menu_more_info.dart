@@ -78,45 +78,46 @@ class DropdownMenuMoreInfo extends StatelessWidget {
                         ),
                       ],
                     ),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Icon(
-                              Icons.battery_saver,
-                              color: MyColors.LIGHT.color,
-                              size: 45,
-                            ),
-                            const SizedBox(width: 10),
-                            Text(
-                              "${controller.inversorNow.value.gain} W",
-                              style: MyTextStyles.h2.textStyle.copyWith(
+                    if (context.width > 350)
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(
+                                Icons.battery_saver,
                                 color: MyColors.LIGHT.color,
+                                size: 45,
                               ),
-                            ),
-                          ],
-                        ),
-                        Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Icon(
-                              Icons.battery_charging_full,
-                              color: MyColors.LIGHT.color,
-                              size: 45,
-                            ),
-                            const SizedBox(width: 10),
-                            Text(
-                              "${controller.inversorNow.value.consumption} W",
-                              style: MyTextStyles.h2.textStyle.copyWith(
+                              const SizedBox(width: 10),
+                              Text(
+                                "${controller.inversorNow.value.gain} W",
+                                style: MyTextStyles.h2.textStyle.copyWith(
+                                  color: MyColors.LIGHT.color,
+                                ),
+                              ),
+                            ],
+                          ),
+                          Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(
+                                Icons.battery_charging_full,
                                 color: MyColors.LIGHT.color,
+                                size: 45,
                               ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
+                              const SizedBox(width: 10),
+                              Text(
+                                "${controller.inversorNow.value.consumption} W",
+                                style: MyTextStyles.h2.textStyle.copyWith(
+                                  color: MyColors.LIGHT.color,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
                     Center(
                       child: MouseRegion(
                         cursor: SystemMouseCursors.click,
@@ -153,9 +154,16 @@ class DropdownMenuMoreInfo extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Image.asset(
-                          "assets/images/full-battery.png",
-                          height: 50,
+                        Container(
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: MyColors.CONTRARY.color.withOpacity(0.6),
+                          ),
+                          padding: const EdgeInsets.all(10),
+                          child: Image.network(
+                            controller.weatherNow.value.weatherIconUrl,
+                            height: 50,
+                          ),
                         ),
                         const SizedBox(height: 10),
                         Text(
@@ -168,86 +176,87 @@ class DropdownMenuMoreInfo extends StatelessWidget {
                         ),
                       ],
                     ),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Icon(
-                              Icons.device_thermostat,
-                              color: MyColors.LIGHT.color,
-                              size: 45,
-                            ),
-                            const SizedBox(width: 10),
-                            Text(
-                              "${controller.weatherNow.value.temperature} °C",
-                              style: MyTextStyles.h2.textStyle.copyWith(
+                    if (context.width > 350)
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(
+                                Icons.device_thermostat,
                                 color: MyColors.LIGHT.color,
+                                size: 45,
                               ),
-                            ),
-                            const SizedBox(width: 15),
-                            if (context.width > 800)
-                              Column(
-                                children: [
-                                  Text(
-                                    "${controller.weatherNow.value.temperatureMin} °C",
-                                    style: MyTextStyles.h3.textStyle.copyWith(
-                                      color: MyColors.PURPLE.color,
-                                    ),
-                                  ),
-                                  Text(
-                                    "${controller.weatherNow.value.temperatureMax} °C",
-                                    style: MyTextStyles.h3.textStyle.copyWith(
-                                      color: MyColors.DANGER.color,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                          ],
-                        ),
-                        const SizedBox(height: 10),
-                        Wrap(
-                          spacing: 15,
-                          children: [
-                            Row(
-                              children: [
-                                Icon(
-                                  Icons.water_drop_outlined,
+                              const SizedBox(width: 10),
+                              Text(
+                                "${controller.weatherNow.value.temperature} °C",
+                                style: MyTextStyles.h2.textStyle.copyWith(
                                   color: MyColors.LIGHT.color,
-                                  size: 45,
                                 ),
-                                const SizedBox(width: 10),
-                                Text(
-                                  "${controller.weatherNow.value.rainProbability} %",
-                                  style: MyTextStyles.h2.textStyle.copyWith(
-                                    color: MyColors.LIGHT.color,
-                                  ),
+                              ),
+                              const SizedBox(width: 15),
+                              if (context.width > 800)
+                                Column(
+                                  children: [
+                                    Text(
+                                      "${controller.weatherNow.value.temperatureMin} °C",
+                                      style: MyTextStyles.h3.textStyle.copyWith(
+                                        color: MyColors.PURPLE.color,
+                                      ),
+                                    ),
+                                    Text(
+                                      "${controller.weatherNow.value.temperatureMax} °C",
+                                      style: MyTextStyles.h3.textStyle.copyWith(
+                                        color: MyColors.DANGER.color,
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                              ],
-                            ),
-                            if (context.width > 800)
+                            ],
+                          ),
+                          const SizedBox(height: 10),
+                          Wrap(
+                            spacing: 15,
+                            children: [
                               Row(
                                 children: [
                                   Icon(
-                                    Icons.air,
+                                    Icons.water_drop_outlined,
                                     color: MyColors.LIGHT.color,
                                     size: 45,
                                   ),
                                   const SizedBox(width: 10),
                                   Text(
-                                    "${controller.weatherNow.value.windSpeed} m/s",
+                                    "${controller.weatherNow.value.rainProbability} %",
                                     style: MyTextStyles.h2.textStyle.copyWith(
                                       color: MyColors.LIGHT.color,
                                     ),
                                   ),
                                 ],
                               ),
-                          ],
-                        ),
-                      ],
-                    ),
+                              if (context.width > 800)
+                                Row(
+                                  children: [
+                                    Icon(
+                                      Icons.air,
+                                      color: MyColors.LIGHT.color,
+                                      size: 45,
+                                    ),
+                                    const SizedBox(width: 10),
+                                    Text(
+                                      "${controller.weatherNow.value.windSpeed} m/s",
+                                      style: MyTextStyles.h2.textStyle.copyWith(
+                                        color: MyColors.LIGHT.color,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                            ],
+                          ),
+                        ],
+                      ),
                     Center(
                       child: MouseRegion(
                         cursor: SystemMouseCursors.click,

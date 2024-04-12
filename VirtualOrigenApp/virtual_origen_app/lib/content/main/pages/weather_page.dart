@@ -113,7 +113,7 @@ class WeatherBody extends StatelessWidget {
                   child: Column(
                     children: [
                       Text(
-                        "chart_inversor_title".tr,
+                        "chart_weather_title".tr,
                         style: MyTextStyles.h2.textStyle.copyWith(
                           color: MyColors.CONTRARY.color,
                         ),

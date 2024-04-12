@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:virtual_origen_app/models/pair.dart';
 import 'package:virtual_origen_app/models/smart_device.dart';
@@ -15,12 +14,14 @@ class SmartDeviceCard extends StatelessWidget {
     required this.onTap,
     required this.onLongPress,
     required this.onSwitch,
+    this.switchIsReadOnly = false,
   }) : super(key: key);
 
   final SmartDevice smartDevice;
   final Function(SmartDevice) onTap;
   final Function(SmartDevice) onLongPress;
   final Function(SmartDevice, bool) onSwitch;
+  final bool switchIsReadOnly;
 
   @override
   Widget build(BuildContext context) {
@@ -71,9 +72,11 @@ class SmartDeviceCard extends StatelessWidget {
                               message: "manual_mode".tr,
                               child: CupertinoSwitch(
                                 value: smartDevice.isManualMode,
-                                onChanged: (value) {
-                                  onSwitch(smartDevice, value);
-                                },
+                                onChanged: switchIsReadOnly
+                                    ? null
+                                    : (value) {
+                                        onSwitch(smartDevice, value);
+                                      },
                                 activeColor: MyColors.SUCCESS.color,
                                 trackColor: MyColors.DARK.color,
                               ),
@@ -168,6 +171,44 @@ class SmartDeviceCard extends StatelessWidget {
             ),
           ),
         ),
+        Positioned(
+          bottom: 5,
+          right: 0,
+          child: Row(
+            children: [
+              for (var i = 0; i < 7; i++)
+                Container(
+                  width: 25,
+                  height: 25,
+                  decoration: BoxDecoration(
+                    color: MyColors.CURRENT.color,
+                    shape: BoxShape.circle,
+                  ),
+                  child: Center(
+                    child: Container(
+                      width: 20,
+                      height: 20,
+                      decoration: BoxDecoration(
+                        color: smartDevice.days[i]
+                            ? MyColors.SUCCESS.color
+                            : MyColors.DARK.color,
+                        shape: BoxShape.circle,
+                      ),
+                      child: Center(
+                        child: Text(
+                          "day_${i + 1}".tr,
+                          style: MyTextStyles.p.textStyle.copyWith(
+                            color: MyColors.LIGHT.color,
+                            fontSize: 10,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+            ],
+          ),
+        )
       ],
     );
   }

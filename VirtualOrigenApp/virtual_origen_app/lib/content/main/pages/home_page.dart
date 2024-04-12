@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:get/get.dart';
 import 'package:virtual_origen_app/content/main/storage/controller/home_controller.dart';
@@ -7,6 +6,7 @@ import 'package:virtual_origen_app/content/main/widgets/dotted_card.dart';
 import 'package:virtual_origen_app/content/main/widgets/property_long_card.dart';
 import 'package:virtual_origen_app/content/main/widgets/property_small_card.dart';
 import 'package:virtual_origen_app/content/main/widgets/user_header.dart';
+import 'package:virtual_origen_app/models/invitation_permission.dart';
 import 'package:virtual_origen_app/services/auth/interface_auth_service.dart';
 import 'package:virtual_origen_app/themes/colors.dart';
 import 'package:virtual_origen_app/themes/styles/my_text_styles.dart';
@@ -46,9 +46,7 @@ class HomeBody extends StatelessWidget {
       child: Column(
         children: [
           UserHeader(
-            userName: authService.getName(),
-            userImage: authService.getProfileImage(),
-            haveNotification: true,
+            authService: authService,
           ),
           Expanded(
             child: ListView(
@@ -63,51 +61,130 @@ class HomeBody extends StatelessWidget {
                   () => Wrap(
                     alignment: WrapAlignment.center,
                     spacing: 15,
-                    children: controller.properties
-                        .map(
-                          (property) => ResponsiveLayout(
-                            mobile: PropertySmallCard(
-                              property: property,
-                              inversorNow:
-                                  controller.getInversorNow(id: property.id),
-                              weatherNow:
-                                  controller.getWeatherNow(id: property.id),
-                              onTap: controller.navigateProperty,
-                              onLongPress: controller.editPropertyDialog,
-                            ),
+                    runSpacing: 15,
+                    children: [
+                      ...controller.properties
+                          .map(
+                            (property) => context.width < 1100
+                                ? PropertySmallCard(
+                                    property: property,
+                                    inversorNow: controller.getInversorNow(
+                                        id: property.id),
+                                    weatherNow: controller.getWeatherNow(
+                                        id: property.id),
+                                    onTap: (property) {
+                                      controller.navigateProperty(
+                                        property,
+                                        authService.getUid(),
+                                      );
+                                    },
+                                    onLongPress: controller.editPropertyDialog,
+                                  )
+                                : PropertyLongCard(
+                                    property: property,
+                                    inversorNow: controller.getInversorNow(
+                                        id: property.id),
+                                    weatherNow: controller.getWeatherNow(
+                                        id: property.id),
+                                    onTap: (property) {
+                                      controller.navigateProperty(
+                                        property,
+                                        authService.getUid(),
+                                      );
+                                    },
+                                    onLongPress: controller.editPropertyDialog,
+                                  ),
+                          )
+                          .toList()
+                          .animate(interval: const Duration(milliseconds: 200))
+                          .fade(begin: 0.1),
+                      Tooltip(
+                        message: "add_property".tr,
+                        child: SizedBox(
+                          height: 170,
+                          child: DottedCard(
+                            onTap: controller.newPropertyDialog,
+                          ),
+                        ),
+                      ),
+                    ]
+                        .map((e) => ResponsiveLayout(
+                            widthTablet: 600,
+                            mobile: e,
                             tablet: SizedBox(
                               width: context.width * 0.455,
-                              child: PropertySmallCard(
-                                property: property,
-                                inversorNow:
-                                    controller.getInversorNow(id: property.id),
-                                weatherNow:
-                                    controller.getWeatherNow(id: property.id),
-                                onTap: controller.navigateProperty,
-                                onLongPress: controller.editPropertyDialog,
-                              ),
+                              child: e,
                             ),
-                            desktop: PropertyLongCard(
-                              property: property,
-                              inversorNow:
-                                  controller.getInversorNow(id: property.id),
-                              weatherNow:
-                                  controller.getWeatherNow(id: property.id),
-                              onTap: controller.navigateProperty,
-                              onLongPress: controller.editPropertyDialog,
-                            ),
-                          ),
-                        )
-                        .toList()
-                        .animate(interval: const Duration(milliseconds: 200))
-                        .fade(begin: 0.1),
+                            desktop: e))
+                        .toList(),
                   ),
                 ),
-                const SizedBox(height: 10),
-                SizedBox(
-                  height: 170,
-                  child: DottedCard(
-                    onTap: controller.newPropertyDialog,
+                const SizedBox(height: 15),
+                Text(
+                  "properties_shared".tr,
+                  style: MyTextStyles.h3.textStyle,
+                ),
+                const SizedBox(height: 15),
+                Obx(
+                  () => Wrap(
+                    alignment: WrapAlignment.center,
+                    spacing: 15,
+                    runSpacing: 15,
+                    children: [
+                      ...controller.propertiesShared
+                          .map(
+                            (ownerId, property) => MapEntry(
+                              ownerId,
+                              context.width < 1100
+                                  ? PropertySmallCard(
+                                      property: property,
+                                      inversorNow: controller.getInversorNow(
+                                          id: property.id),
+                                      weatherNow: controller.getWeatherNow(
+                                          id: property.id),
+                                      onTap: (property) {
+                                        controller.navigateProperty(
+                                          property,
+                                          ownerId,
+                                        );
+                                      },
+                                      onLongPress: (property) {
+                                        if (property.getPermission(
+                                                authService.getEmail()) ==
+                                            InvitationPermission.READ) {
+                                          return;
+                                        }
+                                        controller.editPropertyDialog(property);
+                                      })
+                                  : PropertyLongCard(
+                                      property: property,
+                                      inversorNow: controller.getInversorNow(
+                                          id: property.id),
+                                      weatherNow: controller.getWeatherNow(
+                                          id: property.id),
+                                      onTap: (property) {
+                                        controller.navigateProperty(
+                                          property,
+                                          ownerId,
+                                        );
+                                      },
+                                      onLongPress:
+                                          controller.editPropertyDialog,
+                                    ),
+                            ),
+                          )
+                          .values
+                          .toList()
+                    ]
+                        .map((e) => ResponsiveLayout(
+                            widthTablet: 600,
+                            mobile: e,
+                            tablet: SizedBox(
+                              width: context.width * 0.455,
+                              child: e,
+                            ),
+                            desktop: e))
+                        .toList(),
                   ),
                 ),
               ],

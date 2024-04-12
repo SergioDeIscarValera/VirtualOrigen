@@ -5,6 +5,7 @@ import 'package:virtual_origen_app/services/auth/interface_auth_service.dart';
 
 class AuthServiceFirebase implements IAuthService {
   Worker? _authChangesWorker;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
 
   @override
   Future<bool> changeUserData({
@@ -14,7 +15,7 @@ class AuthServiceFirebase implements IAuthService {
     Function(String p1)? onError,
   }) async {
     try {
-      final user = FirebaseAuth.instance.currentUser;
+      final user = _auth.currentUser;
       if (user == null) {
         if (onError != null) {
           onError('User not found');
@@ -41,7 +42,7 @@ class AuthServiceFirebase implements IAuthService {
     Function(String p1)? onError,
   }) async {
     try {
-      final user = FirebaseAuth.instance.currentUser;
+      final user = _auth.currentUser;
       if (user == null) {
         if (onError != null) {
           onError('User not found');
@@ -62,11 +63,11 @@ class AuthServiceFirebase implements IAuthService {
   }
 
   @override
-  String getEmail() => FirebaseAuth.instance.currentUser?.email ?? '';
+  String getEmail() => _auth.currentUser?.email ?? '';
 
   @override
   String getName() {
-    var name = FirebaseAuth.instance.currentUser?.displayName;
+    var name = _auth.currentUser?.displayName;
     if (name == null || name.isEmpty) {
       return getEmail().split("@").first;
     }
@@ -74,14 +75,14 @@ class AuthServiceFirebase implements IAuthService {
   }
 
   @override
-  String getProfileImage() => FirebaseAuth.instance.currentUser?.photoURL ?? '';
+  String getProfileImage() => _auth.currentUser?.photoURL ?? '';
 
   @override
-  String getUid() => FirebaseAuth.instance.currentUser!.uid;
+  String getUid() => _auth.currentUser!.uid;
 
   @override
   bool? isEmailVerified() {
-    final user = FirebaseAuth.instance.currentUser;
+    final user = _auth.currentUser;
     if (user == null) {
       return null;
     }
@@ -96,7 +97,7 @@ class AuthServiceFirebase implements IAuthService {
     Function? onSuccess,
     Function(String p1)? onError,
   }) {
-    return FirebaseAuth.instance
+    return _auth
         .signInWithEmailAndPassword(email: email, password: password)
         .then((value) {
       if (onSuccess != null) {
@@ -118,7 +119,7 @@ class AuthServiceFirebase implements IAuthService {
       if (GetPlatform.isWeb) {
         GoogleAuthProvider googleProvider = GoogleAuthProvider();
 
-        await FirebaseAuth.instance.signInWithPopup(googleProvider);
+        await _auth.signInWithPopup(googleProvider);
         if (onSuccess != null) {
           onSuccess();
         }
@@ -132,7 +133,7 @@ class AuthServiceFirebase implements IAuthService {
         accessToken: googleAuth?.accessToken,
         idToken: googleAuth?.idToken,
       );
-      await FirebaseAuth.instance.signInWithCredential(credential);
+      await _auth.signInWithCredential(credential);
       if (onSuccess != null) {
         onSuccess();
       }
@@ -150,7 +151,7 @@ class AuthServiceFirebase implements IAuthService {
     Function(String p1)? onError,
   }) async {
     try {
-      await FirebaseAuth.instance.currentUser!.sendEmailVerification();
+      await _auth.currentUser!.sendEmailVerification();
       if (onSuccess != null) {
         onSuccess();
       }
@@ -168,7 +169,7 @@ class AuthServiceFirebase implements IAuthService {
     Function(String p1)? onError,
   }) async {
     try {
-      await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
+      await _auth.sendPasswordResetEmail(email: email);
       if (onSuccess != null) {
         onSuccess();
       }
@@ -181,7 +182,7 @@ class AuthServiceFirebase implements IAuthService {
 
   @override
   Future<void> signOut() {
-    return FirebaseAuth.instance.signOut();
+    return _auth.signOut();
   }
 
   @override
@@ -191,7 +192,7 @@ class AuthServiceFirebase implements IAuthService {
     Function? onSuccess,
     Function(String p1)? onError,
   }) {
-    return FirebaseAuth.instance
+    return _auth
         .createUserWithEmailAndPassword(email: email, password: password)
         .then((value) {
       if (onSuccess != null) {
@@ -209,9 +210,9 @@ class AuthServiceFirebase implements IAuthService {
   void authChanges(
     Function(User? newUser) callback,
   ) {
-    final rxUser = Rx<User?>(FirebaseAuth.instance.currentUser);
+    final rxUser = Rx<User?>(_auth.currentUser);
     _authChangesWorker = ever<User?>(rxUser, callback);
-    rxUser.bindStream(FirebaseAuth.instance.authStateChanges());
+    rxUser.bindStream(_auth.authStateChanges());
   }
 
   @override

@@ -1,25 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:virtual_origen_app/routes/app_routes.dart';
+import 'package:virtual_origen_app/services/auth/interface_auth_service.dart';
+import 'package:virtual_origen_app/services/repository/invitation/interface_invitation_repository.dart';
 import 'package:virtual_origen_app/themes/colors.dart';
 import 'package:virtual_origen_app/themes/styles/my_text_styles.dart';
 
 class UserHeader extends StatelessWidget {
   const UserHeader({
     Key? key,
-    required this.userName,
-    required this.userImage,
-    this.haveNotification = false,
-    this.haveProfile = true,
+    required this.authService,
   }) : super(key: key);
 
-  final String userName;
-  final String userImage;
-  final bool haveNotification;
-  final bool haveProfile;
+  final IAuthService authService;
 
   @override
   Widget build(BuildContext context) {
+    final IInvitationRepository invitationRepository =
+        Get.find<IInvitationRepository>();
+    final RxBool haveNotification = RxBool(false);
+    setHaveNotification(haveNotification, invitationRepository);
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
@@ -40,7 +40,7 @@ class UserHeader extends StatelessWidget {
                 Get.back();
               },
               child: Text(
-                "welcome".tr.replaceAll("{user}", userName),
+                "welcome".tr.replaceAll("{user}", authService.getName()),
                 style: MyTextStyles.h2.textStyle.copyWith(
                   color: MyColors.LIGHT.color,
                 ),
@@ -48,27 +48,28 @@ class UserHeader extends StatelessWidget {
               ),
             ),
           ),
-          if (haveProfile)
-            Stack(
-              children: [
-                MouseRegion(
-                  cursor: SystemMouseCursors.click,
-                  child: GestureDetector(
-                    onTap: () {
-                      Get.toNamed(Routes.USER.path);
-                    },
-                    child: Hero(
-                      tag: "user_image",
-                      child: CircleAvatar(
-                        radius: 25,
-                        backgroundColor: MyColors.CONTRARY.color,
-                        backgroundImage: NetworkImage(userImage),
-                      ),
+          Stack(
+            children: [
+              MouseRegion(
+                cursor: SystemMouseCursors.click,
+                child: GestureDetector(
+                  onTap: () {
+                    Get.toNamed(Routes.USER.path);
+                  },
+                  child: Hero(
+                    tag: "user_image",
+                    child: CircleAvatar(
+                      radius: 25,
+                      backgroundColor: MyColors.CONTRARY.color,
+                      backgroundImage:
+                          NetworkImage(authService.getProfileImage()),
                     ),
                   ),
                 ),
-                if (haveNotification)
-                  Positioned(
+              ),
+              Obx(() {
+                if (haveNotification.value) {
+                  return Positioned(
                     right: -3,
                     top: -3,
                     child: Container(
@@ -79,9 +80,14 @@ class UserHeader extends StatelessWidget {
                         shape: BoxShape.circle,
                       ),
                     ),
-                  ),
-                if (haveNotification)
-                  Positioned(
+                  );
+                } else {
+                  return const SizedBox();
+                }
+              }),
+              Obx(() {
+                if (haveNotification.value) {
+                  return Positioned(
                     right: 0,
                     top: 0,
                     child: Container(
@@ -92,11 +98,21 @@ class UserHeader extends StatelessWidget {
                         shape: BoxShape.circle,
                       ),
                     ),
-                  ),
-              ],
-            ),
+                  );
+                } else {
+                  return const SizedBox();
+                }
+              }),
+            ],
+          ),
         ],
       ),
     );
+  }
+
+  setHaveNotification(
+      RxBool haveNoti, IInvitationRepository invitationRepository) async {
+    haveNoti.value = await invitationRepository.haveNewInvitations(
+        idc: authService.getEmail());
   }
 }

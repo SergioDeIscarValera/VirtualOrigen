@@ -46,11 +46,7 @@ class PropertyHeader extends StatelessWidget {
             ),
           ).animate().fade().slide(),
         ),
-        UserHeader(
-          userName: authService.getName(),
-          userImage: authService.getProfileImage(),
-          haveNotification: true,
-        ),
+        UserHeader(authService: authService),
       ],
     );
   }

@@ -50,8 +50,8 @@ class SmartDeviceDialog extends StatelessWidget {
           onDelete: onDelete,
         ),
       ),
-      desktop: Dialog(
-        child: WrapInMid(
+      desktop: WrapInMid(
+        child: Dialog(
           child: SmartDeviceDialogBody(
             validator: validator,
             smartDevice: smartDevice,
@@ -296,6 +296,7 @@ class SmartDeviceDialogBody extends StatelessWidget {
                     textColor: MyColors.LIGHT,
                     text: "cancel".tr,
                     icon: Icons.cancel,
+                    isSmall: context.width < 550,
                   ),
                   RoundedButton(
                     onPressed: () {
@@ -335,6 +336,7 @@ class SmartDeviceDialogBody extends StatelessWidget {
                     textColor: MyColors.LIGHT,
                     text: "save".tr,
                     icon: Icons.save,
+                    isSmall: context.width < 550,
                   ),
                   if (smartDevice != null)
                     RoundedButton(
@@ -343,6 +345,7 @@ class SmartDeviceDialogBody extends StatelessWidget {
                       textColor: MyColors.LIGHT,
                       text: "delete".tr,
                       icon: Icons.delete,
+                      isSmall: context.width < 550,
                     ),
                 ],
               )

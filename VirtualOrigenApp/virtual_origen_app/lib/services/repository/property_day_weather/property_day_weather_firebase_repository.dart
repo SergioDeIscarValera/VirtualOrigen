@@ -23,7 +23,7 @@ class PropertyDayWeatherFirebaseRepository
   @override
   fromJson(Map<String, dynamic> json) {
     return PropertyHourWeather(
-      dateTime: _dateTimeRangeFromStrings(json["dateTimeEnd"], json[idName]),
+      dateTime: _dateTimeRangeFromStrings(json[idName], json["dateTimeEnd"]),
       temperature: json["tem"],
       temperatureMin: json["temMin"],
       temperatureMax: json["temMax"],
@@ -31,8 +31,8 @@ class PropertyDayWeatherFirebaseRepository
       clouds: json["clouds"],
       windSpeed: json["windSpeed"],
       rainProbability: json["rainProbab"] * 100,
-      weather: WeatherType.values.firstWhere(
-          (element) => element.token.toUpperCase() == json["weather"]),
+      weather: WeatherType.values
+          .firstWhere((element) => element.token == json["weather"]),
       weatherIconUrl: json["weatherIconUrl"],
     );
   }
@@ -47,7 +47,7 @@ class PropertyDayWeatherFirebaseRepository
     var data = docRef.value!.data() as Map<String, dynamic>;
     var entity = (data[listName] as List<dynamic>).firstWhere((task) {
       final dateTimeRange =
-          _dateTimeRangeFromStrings(task["dateTimeEnd"], task[idName]);
+          _dateTimeRangeFromStrings(task[idName], task["dateTimeEnd"]);
       return dateTimeRange.start.isBefore(id) && dateTimeRange.end.isAfter(id);
     }, orElse: () => null);
     if (entity == null) return null;

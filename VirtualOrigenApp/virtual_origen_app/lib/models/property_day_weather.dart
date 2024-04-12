@@ -34,7 +34,7 @@ class PropertyHourWeather {
         windSpeed = 0,
         rainProbability = 0,
         weather = WeatherType.values[0],
-        weatherIconUrl = "";
+        weatherIconUrl = "https://openweathermap.org/img/wn/01d@2x.png";
 }
 
 enum WeatherType {

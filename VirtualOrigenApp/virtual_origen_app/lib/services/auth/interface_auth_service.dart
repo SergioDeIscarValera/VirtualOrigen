@@ -45,6 +45,8 @@ abstract class IAuthService {
   String getProfileImage();
   String getUid();
 
-  void authChanges(Function(User? newUser) callback);
+  void authChanges(
+    Function(User? newUser) callback,
+  );
   void removeAuthChanges();
 }

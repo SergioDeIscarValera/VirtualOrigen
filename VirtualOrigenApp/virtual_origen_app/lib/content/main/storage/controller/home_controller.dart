@@ -8,6 +8,7 @@ import 'package:virtual_origen_app/models/property_day_weather.dart';
 import 'package:virtual_origen_app/routes/app_routes.dart';
 import 'package:virtual_origen_app/services/auth/interface_auth_service.dart';
 import 'package:virtual_origen_app/services/repository/inversor_now/inversor_now_firebase_repository.dart';
+import 'package:virtual_origen_app/services/repository/invitation/interface_invitation_repository.dart';
 import 'package:virtual_origen_app/services/repository/property/interface_property_repository.dart';
 import 'package:virtual_origen_app/services/repository/property_day_weather/property_day_weather_firebase_repository.dart';
 import 'package:virtual_origen_app/themes/colors.dart';
@@ -17,10 +18,12 @@ class HomeController extends GetxController {
   late final IPropertyRepository _propertyRepository;
   late final InversorNowFirebaseRepository _inversorNowRepository;
   late final PropertyDayWeatherFirebaseRepository _propertyDayWeatherRepository;
+  late final IInvitationRepository _invitationRepository;
   late final IAuthService _authService;
   late final MySnackbar _mySnackbar;
 
   final RxList<Property> properties = <Property>[].obs;
+  final RxMap<String, Property> propertiesShared = <String, Property>{}.obs;
 
   final TextEditingController propertyNameController = TextEditingController();
   final Rx<MyColors> color = MyColors.PRIMARY.obs;
@@ -32,9 +35,26 @@ class HomeController extends GetxController {
     _authService = Get.find<IAuthService>();
     _inversorNowRepository = Get.find<InversorNowFirebaseRepository>();
     _propertyRepository = Get.find<IPropertyRepository>();
+    _invitationRepository = Get.find<IInvitationRepository>();
     _mySnackbar = Get.find<MySnackbar>();
     _propertyDayWeatherRepository =
         Get.find<PropertyDayWeatherFirebaseRepository>();
+    _invitationRepository.addListener(
+      idc: _authService.getEmail(),
+      listener: (invitations) async {
+        var acceptedInvitations =
+            invitations.where((element) => element.state).toList();
+        for (var invitation in acceptedInvitations) {
+          var property = await _propertyRepository.findById(
+            id: invitation.propertyId,
+            idc: invitation.ownerId,
+          );
+          if (property != null) {
+            propertiesShared[invitation.ownerId] = property;
+          }
+        }
+      },
+    );
     _propertyRepository.addListener(
       idc: _authService.getUid(),
       listener: (properties) {
@@ -86,11 +106,12 @@ class HomeController extends GetxController {
     });
   }
 
-  void navigateProperty(Property property) {
+  void navigateProperty(Property property, String ownerUid) {
     Get.toNamed(
       Routes.PROPERTY.path,
       arguments: {
         "property": property,
+        "ownerUid": ownerUid,
       },
     );
   }
@@ -142,7 +163,7 @@ class HomeController extends GetxController {
   Future<InversorNow> getInversorNow({required String id}) async {
     return await _inversorNowRepository.findById(
           id: id,
-          idc: _authService.getUid(),
+          idc: id,
         ) ??
         InversorNow.defaultConstructor();
   }

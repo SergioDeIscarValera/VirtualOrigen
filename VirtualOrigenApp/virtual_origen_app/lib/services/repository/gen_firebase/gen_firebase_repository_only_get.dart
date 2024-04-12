@@ -11,6 +11,7 @@ abstract class GenFirebaseRepositoryOnlyGet<T, ID>
   T fromJson(Map<String, dynamic> json);
 
   StreamSubscription<DocumentSnapshot>? listenerStream;
+  StreamSubscription<DocumentSnapshot>? singleListenerStream;
 
   Future<MapEntry<DocumentReference<Object?>, DocumentSnapshot<Object?>?>>
       getRefAndSnapshot({required String idc}) async {
@@ -29,6 +30,37 @@ abstract class GenFirebaseRepositoryOnlyGet<T, ID>
   }
 
   @override
+  void addSingleListener({
+    required ID id,
+    required String idc,
+    required Function(T?) listener,
+  }) {
+    singleListenerStream = FirebaseFirestore.instance
+        .collection(collectionName)
+        .doc(idc)
+        .snapshots()
+        .listen((DocumentSnapshot snapshot) {
+      if (checkIfDocExists(snapshot)) {
+        listener(null);
+        return;
+      }
+      var data = snapshot.data() as Map<String, dynamic>;
+      var entity = (data[listName] as List<dynamic>)
+          .firstWhere((task) => task[idName] == id, orElse: () => null);
+      if (entity == null) {
+        listener(null);
+        return;
+      }
+      listener(fromJson(entity as Map<String, dynamic>));
+    });
+  }
+
+  @override
+  void removeSingleListener({required ID id, required String idc}) {
+    singleListenerStream?.cancel();
+  }
+
+  @override
   void addListener({
     required String idc,
     required Function(List<T>) listener,
@@ -38,7 +70,10 @@ abstract class GenFirebaseRepositoryOnlyGet<T, ID>
         .doc(idc)
         .snapshots()
         .listen((DocumentSnapshot snapshot) {
-      if (checkIfDocExists(snapshot)) return;
+      if (checkIfDocExists(snapshot)) {
+        listener([]);
+        return;
+      }
       var data = snapshot.data() as Map<String, dynamic>;
       var entities = (data[listName] as List<dynamic>)
           .map((e) => fromJson(e as Map<String, dynamic>))

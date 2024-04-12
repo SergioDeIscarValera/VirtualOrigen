@@ -12,13 +12,15 @@ class PropertyFirebaseRepository extends GenFirebaseRepository<Property, String>
   @override
   Property fromJson(Map<String, dynamic> json) {
     return Property(
-        id: json["id"],
-        name: json["name"],
-        color: MyColors.values
-            .firstWhere((element) => element.token == json["color"]),
-        location: Pair.doubleFromString(json["location"]),
-        guests: Map<String, String>.from(json["guests"])
-            .map((key, value) => MapEntry(key, value.toString())));
+      id: json["id"],
+      name: json["name"],
+      color: MyColors.values
+          .firstWhere((element) => element.token == json["color"]),
+      location: Pair.doubleFromString(json["location"]),
+      guests: (json["guests"] as List)
+          .map((e) => PropertyGuest.fromJson(e))
+          .toList(),
+    );
   }
 
   @override
@@ -34,7 +36,7 @@ class PropertyFirebaseRepository extends GenFirebaseRepository<Property, String>
       "name": entity.name,
       "color": entity.color.token,
       "location": entity.location.toString(),
-      "guests": entity.guests,
+      "guests": entity.guests.map((e) => e.toJson()).toList(),
     };
   }
 }

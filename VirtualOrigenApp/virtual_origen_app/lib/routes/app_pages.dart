@@ -3,6 +3,7 @@ import 'package:virtual_origen_app/content/auth/pages/email_validate_page.dart';
 import 'package:virtual_origen_app/content/auth/pages/forgot_password_page.dart';
 import 'package:virtual_origen_app/content/auth/pages/login_page.dart';
 import 'package:virtual_origen_app/content/auth/pages/singin_page.dart';
+import 'package:virtual_origen_app/content/auth/storage/binding/auth_binding.dart';
 import 'package:virtual_origen_app/content/first_time/pages/first_time_page.dart';
 import 'package:virtual_origen_app/content/first_time/storage/binding/first_time_binding.dart';
 import 'package:virtual_origen_app/content/main/pages/home_page.dart';
@@ -30,18 +31,22 @@ class AppPages {
     GetPage(
       name: Routes.LOGIN.path,
       page: () => const LoginPage(),
+      binding: AuthBinding(),
     ),
     GetPage(
       name: Routes.SINGUP.path,
       page: () => const SingupPage(),
+      binding: AuthBinding(),
     ),
     GetPage(
       name: Routes.FORGOT_PASSWORD.path,
       page: () => const ForgotPasswordPage(),
+      binding: AuthBinding(),
     ),
     GetPage(
       name: Routes.EMAIL_VERIFICATION.path,
       page: () => const EmailValidatePage(),
+      binding: AuthBinding(),
     ),
     GetPage(
       name: Routes.HOME.path,
@@ -59,6 +64,8 @@ class AppPages {
       name: Routes.SMART_DEVICE.path,
       page: () => const SmartDevicePage(),
       binding: SmartDeviceBinding(),
+      transition: Transition.noTransition,
+      transitionDuration: Duration.zero,
     ),
     GetPage(
       name: Routes.INVERSOR.path,
@@ -78,6 +85,8 @@ class AppPages {
       name: Routes.USER.path,
       page: () => const UserPage(),
       binding: UserBinding(),
+      transition: Transition.noTransition,
+      transitionDuration: Duration.zero,
     ),
     GetPage(
       name: Routes.PRIVACY_POLICY.path,

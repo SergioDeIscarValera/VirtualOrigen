@@ -42,9 +42,7 @@ class UserBody extends StatelessWidget {
       child: Column(
         children: [
           UserHeader(
-            userName: authService.getName(),
-            userImage: authService.getProfileImage(),
-            haveProfile: false,
+            authService: authService,
           ),
           Expanded(
             child: ListView(
@@ -64,6 +62,11 @@ class UserBody extends StatelessWidget {
                         loadingProgress == null
                             ? child
                             : const CircularProgressIndicator(),
+                    errorBuilder: (context, error, stackTrace) => Icon(
+                      Icons.error_outline_rounded,
+                      color: MyColors.CONTRARY.color,
+                      size: 200,
+                    ),
                   ),
                 ),
                 const SizedBox(height: 15),
@@ -73,6 +76,116 @@ class UserBody extends StatelessWidget {
                   label: "",
                   color: MyColors.PRIMARY,
                   editable: false,
+                ),
+                const SizedBox(height: 15),
+                Obx(
+                  () => ExpansionTile(
+                    title: Text(
+                      "new_invitations".tr,
+                      style: MyTextStyles.p.textStyle,
+                      textAlign: TextAlign.center,
+                    ),
+                    leading: Icon(
+                      Icons.notifications_active,
+                      color: MyColors.SUCCESS.color,
+                    ),
+                    expandedAlignment: Alignment.center,
+                    onExpansionChanged: (value) {
+                      if (value) {
+                        controller.mackAsReaded();
+                      }
+                    },
+                    children: controller.newInvitations
+                        .map(
+                          (invitation) => ListTile(
+                            title: Text(invitation.propertyName),
+                            subtitle: Text(invitation.fromEmail),
+                            leading: Image.network(
+                              invitation.fromProfileImage,
+                              width: 50,
+                              height: 50,
+                              loadingBuilder:
+                                  (context, child, loadingProgress) =>
+                                      loadingProgress == null
+                                          ? child
+                                          : const CircularProgressIndicator(),
+                              errorBuilder: (context, error, stackTrace) =>
+                                  Icon(
+                                Icons.error_outline_rounded,
+                                color: MyColors.CONTRARY.color,
+                                size: 50,
+                              ),
+                            ),
+                            trailing: Wrap(
+                              children: [
+                                IconButton(
+                                  icon: Icon(
+                                    Icons.close,
+                                    color: MyColors.DANGER.color,
+                                  ),
+                                  onPressed: () {
+                                    controller.processInvitation(
+                                      invitation,
+                                      false,
+                                    );
+                                  },
+                                ),
+                                IconButton(
+                                  icon: Icon(
+                                    Icons.check,
+                                    color: MyColors.SUCCESS.color,
+                                  ),
+                                  onPressed: () {
+                                    controller.processInvitation(
+                                      invitation,
+                                      true,
+                                    );
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                        )
+                        .toList(),
+                  ),
+                ),
+                const SizedBox(height: 15),
+                Obx(
+                  () => ExpansionTile(
+                    title: Text(
+                      "invitations".tr,
+                      style: MyTextStyles.p.textStyle,
+                      textAlign: TextAlign.center,
+                    ),
+                    leading: Icon(
+                      Icons.house,
+                      color: MyColors.SUCCESS.color,
+                    ),
+                    expandedAlignment: Alignment.center,
+                    children: controller.oldInvitations
+                        .map(
+                          (invitation) => ListTile(
+                            title: Text(invitation.propertyName),
+                            subtitle: Text(invitation.fromEmail),
+                            trailing: Wrap(
+                              children: [
+                                IconButton(
+                                  icon: Icon(
+                                    Icons.delete,
+                                    color: MyColors.DANGER.color,
+                                  ),
+                                  onPressed: () {
+                                    controller.removeInvitation(
+                                      invitation,
+                                    );
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                        )
+                        .toList(),
+                  ),
                 ),
               ],
             ),

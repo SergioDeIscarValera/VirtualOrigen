@@ -1,5 +1,4 @@
 import 'package:virtual_origen_app/models/invitation.dart';
-import 'package:virtual_origen_app/models/permisionss.dart';
 import 'package:virtual_origen_app/services/repository/gen_firebase/gen_firebase_repository.dart';
 import 'package:virtual_origen_app/services/repository/invitation/interface_invitation_repository.dart';
 
@@ -12,30 +11,37 @@ class InvitationFirebaseRepository
   @override
   Invitation fromJson(Map<String, dynamic> json) {
     return Invitation(
-      fromId: json["fromId"],
-      toId: json["toId"],
+      fromEmail: json["fromEmail"],
+      fromProfileImage: json["fromProfileImage"],
+      ownerId: json["ownerId"],
       propertyId: json["propertyId"],
+      propertyName: json["propertyName"],
       state: json["state"],
-      permission: Permissionss.values.firstWhere(
-        (element) => element.token == json["permission"],
-      ),
+      isNew: json["isNew"],
     );
   }
 
   @override
-  String get idName => "id";
+  String get idName => "propertyId";
 
   @override
-  String get listName => "properties";
+  String get listName => "invitatios";
 
   @override
   Map<String, dynamic> toJson(Invitation entity) {
     return {
-      "fromId": entity.fromId,
-      "toId": entity.toId,
+      "fromEmail": entity.fromEmail,
+      "fromProfileImage": entity.fromProfileImage,
+      "ownerId": entity.ownerId,
       "propertyId": entity.propertyId,
+      "propertyName": entity.propertyName,
       "state": entity.state,
-      "permission": entity.permission.token,
+      "isNew": entity.isNew,
     };
+  }
+
+  @override
+  Future<bool> haveNewInvitations({required String idc}) async {
+    return (await findAll(idc: idc)).any((element) => element.isNew);
   }
 }

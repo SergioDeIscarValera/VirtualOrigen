@@ -1,4 +1,4 @@
-import 'package:flutter/cupertino.dart';
+import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:get/get.dart';
@@ -6,14 +6,15 @@ import 'package:virtual_origen_app/content/main/storage/controller/property_cont
 import 'package:virtual_origen_app/content/main/widgets/dotted_card.dart';
 import 'package:virtual_origen_app/content/main/widgets/smart_device_card.dart';
 import 'package:virtual_origen_app/content/main/widgets/user_header.dart';
+import 'package:virtual_origen_app/models/invitation_permission.dart';
 import 'package:virtual_origen_app/models/property.dart';
 import 'package:virtual_origen_app/services/auth/interface_auth_service.dart';
 import 'package:virtual_origen_app/themes/colors.dart';
 import 'package:virtual_origen_app/themes/styles/my_text_styles.dart';
 import 'package:virtual_origen_app/widgets/my_scaffold.dart';
 import 'package:virtual_origen_app/widgets/responsive_layout.dart';
-
-import '../widgets/dropdown_menu_more_info.dart';
+import 'package:virtual_origen_app/content/main/widgets/dropdown_menu_more_info.dart';
+import 'package:virtual_origen_app/content/main/widgets/property_guest_card.dart';
 
 class PropertyPage extends StatelessWidget {
   const PropertyPage({Key? key}) : super(key: key);
@@ -22,8 +23,14 @@ class PropertyPage extends StatelessWidget {
   Widget build(BuildContext context) {
     var controller = Get.find<PropertyController>();
     var authService = Get.find<IAuthService>();
-    var propertySelected = Get.arguments['property'] as Property?;
-    controller.setPropertySelected(propertySelected);
+    final args = Get.arguments as Map<String, dynamic>;
+    var propertySelected = args.containsKey('property')
+        ? Get.arguments['property'] as Property
+        : null;
+    var ownerUid = args.containsKey('ownerUid')
+        ? Get.arguments['ownerUid'] as String
+        : null;
+    controller.setPropertySelected(propertySelected, ownerUid);
     return MyScaffold(
       backgroundColor: MyColors.CURRENT,
       body: PropertyBody(
@@ -84,9 +91,7 @@ class PropertyBody extends StatelessWidget {
                 ).animate().fade().slide(),
               ),
               UserHeader(
-                userName: authService.getName(),
-                userImage: authService.getProfileImage(),
-                haveNotification: true,
+                authService: authService,
               ),
             ],
           ),
@@ -99,48 +104,115 @@ class PropertyBody extends StatelessWidget {
                   style: MyTextStyles.h3.textStyle,
                 ),
                 const SizedBox(height: 15),
-                Obx(
-                  () => Wrap(
+                Obx(() {
+                  final permission = controller.propertySelected.value
+                      .getPermission(authService.getEmail());
+                  return Wrap(
                     alignment: WrapAlignment.center,
                     spacing: 15,
-                    children: controller.smartDevices
-                        .map(
-                          (smartDevice) => ResponsiveLayout(
-                            mobile: SmartDeviceCard(
+                    children: [
+                      ...controller.smartDevices
+                          .map(
+                            (smartDevice) => SmartDeviceCard(
                               smartDevice: smartDevice,
                               onTap: controller.navigateSmartDeviceDetails,
-                              onLongPress: controller.editSmartDeviceDialog,
+                              onLongPress: (value) {
+                                if (permission == InvitationPermission.READ) {
+                                  return;
+                                }
+                                controller.editSmartDeviceDialog(smartDevice);
+                              },
                               onSwitch: controller.changeManualMode,
+                              switchIsReadOnly:
+                                  permission == InvitationPermission.READ,
                             ),
-                            tablet: SizedBox(
-                              width: context.width * 0.455,
-                              child: SmartDeviceCard(
-                                smartDevice: smartDevice,
-                                onTap: controller.navigateSmartDeviceDetails,
-                                onLongPress: controller.editSmartDeviceDialog,
-                                onSwitch: controller.changeManualMode,
+                          )
+                          .toList(),
+                      if (controller.propertySelected.value
+                              .getPermission(authService.getEmail()) !=
+                          InvitationPermission.READ)
+                        Tooltip(
+                          message: "add_smart_device".tr,
+                          child: SizedBox(
+                            height: 170,
+                            child: DottedCard(
+                              onTap: controller.newSmartDeviceDialog,
+                            ),
+                          ),
+                        ),
+                    ]
+                        .map((e) => ResponsiveLayout(
+                              mobile: e,
+                              tablet: SizedBox(
+                                width: context.width * 0.455,
+                                child: e,
                               ),
-                            ),
-                            desktop: SizedBox(
-                              width: context.width * 0.3,
-                              child: SmartDeviceCard(
-                                smartDevice: smartDevice,
-                                onTap: controller.navigateSmartDeviceDetails,
-                                onLongPress: controller.editSmartDeviceDialog,
-                                onSwitch: controller.changeManualMode,
+                              desktop: SizedBox(
+                                width: context.width * 0.3,
+                                child: e,
+                              ),
+                            ))
+                        .toList(),
+                  );
+                }),
+                const SizedBox(height: 15),
+                Obx(() {
+                  if (controller.propertySelected.value
+                              .getPermission(authService.getEmail()) !=
+                          InvitationPermission.FULL &&
+                      controller.ownerUid != authService.getUid()) {
+                    return const SizedBox();
+                  }
+                  return Column(
+                    children: [
+                      Text(
+                        "guests_titles".tr,
+                        style: MyTextStyles.h3.textStyle,
+                      ),
+                      const SizedBox(height: 15),
+                      Wrap(
+                        alignment: WrapAlignment.center,
+                        spacing: 15,
+                        children: [
+                          ...controller.propertySelected.value.guests
+                              .map((propertyGuest) => PropertyGuestCard(
+                                    propertyGuest: propertyGuest,
+                                    onPermissionChange:
+                                        controller.changeGuestPermission,
+                                    onRemove: controller.removeGuest,
+                                  )),
+                          Tooltip(
+                            message: "add_guest".tr,
+                            child: MouseRegion(
+                              cursor: SystemMouseCursors.click,
+                              child: GestureDetector(
+                                onTap: controller.openInvitationDialog,
+                                child: SizedBox(
+                                  height: 70,
+                                  width: 70,
+                                  child: DottedBorder(
+                                    color: MyColors.CONTRARY.color,
+                                    radius: const Radius.circular(75),
+                                    borderType: BorderType.RRect,
+                                    dashPattern: const [8, 4],
+                                    strokeWidth: 2,
+                                    child: Center(
+                                      child: Icon(
+                                        Icons.add,
+                                        color: MyColors.CONTRARY.color,
+                                        size: 40,
+                                      ),
+                                    ),
+                                  ),
+                                ),
                               ),
                             ),
                           ),
-                        )
-                        .toList(),
-                  ),
-                ),
-                SizedBox(
-                  height: 170,
-                  child: DottedCard(
-                    onTap: controller.newSmartDeviceDialog,
-                  ),
-                ),
+                        ],
+                      ),
+                    ],
+                  );
+                }),
               ],
             ),
           ),

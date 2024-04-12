@@ -221,7 +221,7 @@ class PropertyLongCard extends StatelessWidget {
                                 return const CircularProgressIndicator();
                               }
                               return Text(
-                                "${snapshot.data!.battery.toInt()} W",
+                                "${snapshot.data!.consumption.toInt()} W",
                                 style: MyTextStyles.p.textStyle.copyWith(
                                   color: MyColors.LIGHT.color,
                                   fontSize: 22,

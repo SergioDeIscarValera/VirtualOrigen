@@ -14,13 +14,29 @@ class InversorPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var controller = Get.find<InversorController>();
-    var authService = Get.find<IAuthService>();
-    var propertySelected = Get.arguments['property'] as Property?;
-    controller.setPropertySelected(propertySelected);
-    return MyScaffold(
-      backgroundColor: MyColors.CURRENT,
-      body: InversorBody(controller: controller, authService: authService),
+    // var controller = Get.find<InversorController>();
+    // var authService = Get.find<IAuthService>();
+    // final args = Get.arguments as Map<String, dynamic>? ?? {};
+    // var propertySelected =
+    //     args.containsKey("property") ? ['property'] as Property : null;
+    // controller.setPropertySelected(propertySelected);
+    // return MyScaffold(
+    //   backgroundColor: MyColors.CURRENT,
+    //   body: InversorBody(controller: controller, authService: authService),
+    // );
+    return GetBuilder<InversorController>(
+      builder: (controller) {
+        final authService = Get.find<IAuthService>();
+        final args = Get.arguments as Map<String, dynamic>? ?? {};
+        // var propertySelected =
+        //     args.containsKey("property") ? ['property'] as Property : null;
+        // controller.setPropertySelected(propertySelected);
+        controller.setPropertySelected(args['property'] as Property?);
+        return MyScaffold(
+          backgroundColor: MyColors.CURRENT,
+          body: InversorBody(controller: controller, authService: authService),
+        );
+      },
     );
   }
 }
@@ -70,7 +86,7 @@ class InversorBody extends StatelessWidget {
                             spacing: 10,
                             children: [
                               Icon(
-                                Icons.battery_saver,
+                                Icons.battery_charging_full,
                                 color: MyColors.LIGHT.color,
                               ),
                               Tooltip(
@@ -126,7 +142,7 @@ class InversorBody extends StatelessWidget {
                             spacing: 10,
                             children: [
                               Icon(
-                                Icons.battery_charging_full,
+                                Icons.battery_saver,
                                 color: MyColors.LIGHT.color,
                               ),
                               Tooltip(

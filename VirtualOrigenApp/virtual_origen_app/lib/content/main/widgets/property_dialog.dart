@@ -67,8 +67,8 @@ class PropertyDialog extends StatelessWidget {
           onDelete: onDelete,
         ),
       ),
-      desktop: Dialog(
-        child: WrapInMid(
+      desktop: WrapInMid(
+        child: Dialog(
           child: PropertyDialogBody(
             nameController: nameController,
             color: color,
@@ -183,6 +183,7 @@ class PropertyDialogBody extends StatelessWidget {
                   textColor: MyColors.LIGHT,
                   text: "cancel".tr,
                   icon: Icons.cancel,
+                  isSmall: context.width < 550,
                 ),
                 RoundedButton(
                   onPressed: () {
@@ -195,6 +196,7 @@ class PropertyDialogBody extends StatelessWidget {
                   textColor: MyColors.LIGHT,
                   text: "save".tr,
                   icon: Icons.save,
+                  isSmall: context.width < 550,
                 ),
                 if (isEditing && onDelete != null)
                   RoundedButton(
@@ -203,6 +205,7 @@ class PropertyDialogBody extends StatelessWidget {
                     textColor: MyColors.LIGHT,
                     text: "delete".tr,
                     icon: Icons.delete,
+                    isSmall: context.width < 550,
                   ),
               ],
             )

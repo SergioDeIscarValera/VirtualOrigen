@@ -55,7 +55,8 @@ abstract class GenFirebaseRepository<T, ID>
       return entity;
     }
     var data = docRef.value!.data() as Map<String, dynamic>;
-    var entities = data[listName] as List<dynamic>;
+    var entities =
+        data.containsKey(listName) ? data[listName] as List<dynamic> : [];
     var pos = entities
         .indexWhere((element) => element[idName] == toJson(entity)[idName]);
     entities

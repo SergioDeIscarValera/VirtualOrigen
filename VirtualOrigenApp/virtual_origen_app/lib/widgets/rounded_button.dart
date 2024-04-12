@@ -11,6 +11,7 @@ class RoundedButton extends StatelessWidget {
     this.text,
     this.icon,
     this.tooltip,
+    this.isSmall = false,
   }) : super(key: key);
 
   final Function() onPressed;
@@ -19,6 +20,7 @@ class RoundedButton extends StatelessWidget {
   final IconData? icon;
   final MyColors color;
   final MyColors textColor;
+  final bool isSmall;
 
   @override
   Widget build(BuildContext context) {
@@ -46,8 +48,9 @@ class RoundedButton extends StatelessWidget {
                 crossAxisAlignment: WrapCrossAlignment.center,
                 children: [
                   if (icon != null) Icon(icon, color: textColor.color),
-                  if (icon != null && text != null) const SizedBox(width: 10),
-                  if (text != null)
+                  if (icon != null && text != null && !isSmall)
+                    const SizedBox(width: 10),
+                  if (text != null && !isSmall)
                     Text(
                       text!,
                       style: MyTextStyles.p.textStyle.copyWith(
