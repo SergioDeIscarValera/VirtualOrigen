@@ -26,12 +26,13 @@ class WeatherChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final DateFormat formatter = DateFormat('dd hh:mm');
+    final DateFormat formatter = DateFormat('dd HH:mm');
     final temDisplay = _refortmatList(temData, offset, displayCount);
     final rainDisplay = _refortmatList(rainData, offset, displayCount);
     final windSpeedDisplay =
         _refortmatList(windSpeedData, offset, displayCount);
     final displayedDateData = dateData.sublist(offset - displayCount, offset);
+    final now = DateTime.now();
     return LineChart(
       curve: Curves.easeInOut,
       duration: const Duration(milliseconds: 0),
@@ -142,6 +143,16 @@ class WeatherChart extends StatelessWidget {
             ),
           ),
         ),
+        extraLinesData: ExtraLinesData(
+          extraLinesOnTop: false,
+          verticalLines: [
+            VerticalLine(
+              x: _nearestIndex(displayedDateData, now).toDouble(),
+              color: MyColors.CONTRARY.color.withOpacity(0.8),
+              strokeWidth: 4,
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -152,5 +163,21 @@ class WeatherChart extends StatelessWidget {
       count++;
       return FlSpot(count.toDouble(), e.y);
     }).toList();
+  }
+
+  int _nearestIndex(List<DateTime> lista, DateTime horaActual) {
+    int indice = -1;
+    Duration? diferenciaMinima;
+
+    for (int i = 0; i < lista.length; i++) {
+      Duration diferencia = horaActual.difference(lista[i]).abs();
+
+      if (diferenciaMinima == null || diferencia < diferenciaMinima) {
+        diferenciaMinima = diferencia;
+        indice = i;
+      }
+    }
+
+    return indice;
   }
 }

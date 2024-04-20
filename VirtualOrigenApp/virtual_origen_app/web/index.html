@@ -61,13 +61,10 @@
     fetch('config.json')
       .then(response => response.json())
       .then(data => {
-        console.log('Loaded configuration:', data);
         const googleMapsApiKey = data.google_maps_key;
-        console.log('Loading Google Maps with API key:', googleMapsApiKey);
         const script = document.createElement('script');
         script.src = `https://maps.googleapis.com/maps/api/js?key=${googleMapsApiKey}`;
         document.head.appendChild(script);
-        console.log(script.src);
       })
       .catch(error => console.error('Error loading configuration:', error));
   </script>

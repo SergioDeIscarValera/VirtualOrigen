@@ -37,8 +37,8 @@ class PropertyDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     var validator = Get.find<FormValidator>();
     return ResponsiveLayout(
-      mobile: Material(
-        type: MaterialType.transparency,
+      mobile: Dialog.fullscreen(
+        backgroundColor: Colors.transparent,
         child: Container(
           margin: const EdgeInsets.all(10),
           child: PropertyDialogBody(
@@ -120,13 +120,14 @@ class PropertyDialogBody extends StatelessWidget {
       ),
       child: Form(
         key: formKey,
-        child: Column(
+        child: ListView(
           children: [
             Text(
               isEditing ? "edit_property".tr : "new_property".tr,
               style: MyTextStyles.h2.textStyle.copyWith(
                 color: MyColors.CONTRARY.color,
               ),
+              textAlign: TextAlign.center,
             ),
             const SizedBox(height: 20),
             MyTextForm(
@@ -146,7 +147,9 @@ class PropertyDialogBody extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 20),
-            Expanded(
+            SizedBox(
+              height: context.height * 0.5,
+              width: context.width * 0.8,
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(24),
                 child: GoogleMap(
@@ -208,7 +211,8 @@ class PropertyDialogBody extends StatelessWidget {
                     isSmall: context.width < 550,
                   ),
               ],
-            )
+            ),
+            const SizedBox(height: 20),
           ],
         ),
       ),

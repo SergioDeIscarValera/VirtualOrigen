@@ -12,6 +12,7 @@ class MyTextForm extends StatelessWidget {
     this.obscureText = false,
     this.editable = true,
     this.validator,
+    this.suffix,
   }) : super(key: key);
 
   final TextEditingController controller;
@@ -21,6 +22,7 @@ class MyTextForm extends StatelessWidget {
   final bool obscureText;
   final bool editable;
   final String? Function(String?)? validator;
+  final Widget? suffix;
 
   @override
   Widget build(BuildContext context) {
@@ -34,6 +36,7 @@ class MyTextForm extends StatelessWidget {
           icon,
           color: color.color,
         ),
+        suffixIcon: suffix,
         labelText: label,
         labelStyle: MyTextStyles.p.textStyle
             .copyWith(color: color.color.withOpacity(0.75)),

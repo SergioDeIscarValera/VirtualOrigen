@@ -23,8 +23,8 @@ class InvitationDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     var validator = Get.find<FormValidator>();
     return ResponsiveLayout(
-      mobile: Material(
-        type: MaterialType.transparency,
+      mobile: Dialog.fullscreen(
+        backgroundColor: Colors.transparent,
         child: Container(
           margin: const EdgeInsets.all(10),
           child: Center(

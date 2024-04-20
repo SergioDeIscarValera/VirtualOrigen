@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:virtual_origen_app/services/auth/interface_auth_service.dart';
@@ -6,6 +9,7 @@ import 'package:virtual_origen_app/services/auth/interface_auth_service.dart';
 class AuthServiceFirebase implements IAuthService {
   Worker? _authChangesWorker;
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseStorage _storage = FirebaseStorage.instance;
 
   @override
   Future<bool> changeUserData({
@@ -22,8 +26,18 @@ class AuthServiceFirebase implements IAuthService {
         }
         return Future.value(false);
       }
+
       await user.updateDisplayName(name);
-      await user.updatePhotoURL(profileImage);
+      final file = File(profileImage!);
+      final extension = file.path.split('.').last;
+      final task =
+          _storage.ref().child('profile/${user.uid}.$extension').putFile(file);
+      await task.whenComplete(() => null);
+      final downloadUrl =
+          await _storage.ref('profile/${user.uid}.$extension').getDownloadURL();
+
+      await user.updatePhotoURL(downloadUrl);
+
       if (onSuccess != null) {
         onSuccess();
       }
@@ -76,7 +90,6 @@ class AuthServiceFirebase implements IAuthService {
 
   @override
   String getProfileImage() => _auth.currentUser?.photoURL ?? '';
-
   @override
   String getUid() => _auth.currentUser!.uid;
 
@@ -194,10 +207,17 @@ class AuthServiceFirebase implements IAuthService {
   }) {
     return _auth
         .createUserWithEmailAndPassword(email: email, password: password)
-        .then((value) {
+        .then((value) async {
       if (onSuccess != null) {
         onSuccess();
-        sendEmailVerification(onSuccess: onSuccess, onError: onError);
+        await sendEmailVerification(onSuccess: onSuccess, onError: onError);
+        await changeUserData(
+          name: getName(),
+          profileImage:
+              "https://cdn-icons-png.flaticon.com/512/3088/3088765.png",
+          onSuccess: onSuccess,
+          onError: onError,
+        );
       }
     }).catchError((e) {
       if (onError != null) {

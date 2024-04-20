@@ -1,6 +1,4 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:virtual_origen_app/models/invitation_permission.dart';
 import 'package:virtual_origen_app/models/property.dart';
@@ -30,29 +28,41 @@ class PropertyGuestCard extends StatelessWidget {
             shape: BoxShape.circle,
           ),
           child: Center(
-            child: Builder(builder: (context) {
-              if (propertyGuest.state == 0) {
-                return Icon(
-                  Icons.help,
-                  color: MyColors.CURRENT.color,
-                  size: 50,
+            child: Builder(
+              builder: (context) {
+                if (propertyGuest.state == 0) {
+                  return Icon(
+                    Icons.help,
+                    color: MyColors.CURRENT.color,
+                    size: 50,
+                  );
+                }
+                return Image.network(
+                  propertyGuest.guestProfileImage,
+                  width: 50,
+                  height: 50,
+                  color: propertyGuest.state == 1
+                      ? MyColors.SUCCESS.color.withOpacity(0.2)
+                      : MyColors.DANGER.color.withOpacity(0.2),
+                  loadingBuilder: (context, child, loadingProgress) {
+                    if (loadingProgress == null) return child;
+                    return Center(
+                      child: CircularProgressIndicator(
+                        value: loadingProgress.expectedTotalBytes != null
+                            ? loadingProgress.cumulativeBytesLoaded /
+                                loadingProgress.expectedTotalBytes!
+                            : null,
+                      ),
+                    );
+                  },
+                  errorBuilder: (context, error, stackTrace) => Icon(
+                    Icons.person,
+                    color: MyColors.CURRENT.color,
+                    size: 50,
+                  ),
                 );
-              }
-              return Image.network(
-                propertyGuest.guestProfileImage,
-                width: 50,
-                height: 50,
-                color: propertyGuest.state == 1
-                    ? MyColors.SUCCESS.color.withOpacity(0.2)
-                    : MyColors.DANGER.color.withOpacity(0.2),
-                colorBlendMode: BlendMode.color,
-                errorBuilder: (context, error, stackTrace) => Icon(
-                  Icons.person,
-                  color: MyColors.CURRENT.color,
-                  size: 50,
-                ),
-              );
-            }),
+              },
+            ),
           ),
         ),
         Positioned(

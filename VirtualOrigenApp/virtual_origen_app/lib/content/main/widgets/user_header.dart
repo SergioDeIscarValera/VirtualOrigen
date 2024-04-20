@@ -61,8 +61,9 @@ class UserHeader extends StatelessWidget {
                     child: CircleAvatar(
                       radius: 25,
                       backgroundColor: MyColors.CONTRARY.color,
-                      backgroundImage:
-                          NetworkImage(authService.getProfileImage()),
+                      backgroundImage: NetworkImage(
+                        authService.getProfileImage(),
+                      ),
                     ),
                   ),
                 ),

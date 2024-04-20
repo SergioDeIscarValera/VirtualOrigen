@@ -40,10 +40,6 @@ class WeatherBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // final displayCount =
-    //     context.width * 25 ~/ 2560 > controller.weatherList.length
-    //         ? controller.weatherList.length
-    //         : context.width * 25 ~/ 2560;
     return Expanded(
       child: Column(
         children: [

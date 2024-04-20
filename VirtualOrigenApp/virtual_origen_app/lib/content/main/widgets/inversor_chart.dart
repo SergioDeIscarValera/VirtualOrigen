@@ -28,7 +28,7 @@ class InversorChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final DateFormat formatter = DateFormat('dd hh:mm');
+    final DateFormat formatter = DateFormat('dd HH:mm');
     final batteryDisplay = _refortmatList(batteryData, offset, displayCount);
     final gainDisplay = _refortmatList(gainData, offset, displayCount);
     final consumptionDisplay =

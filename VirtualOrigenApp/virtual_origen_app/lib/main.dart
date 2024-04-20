@@ -15,6 +15,7 @@ import 'package:virtual_origen_app/services/secrets.dart';
 import 'package:virtual_origen_app/services/storage/interface_local_storage.dart';
 import 'package:virtual_origen_app/services/storage/local_storage_get.dart';
 import 'package:virtual_origen_app/themes/thrmes.dart';
+import 'package:virtual_origen_app/utils/form_validator.dart';
 import 'package:virtual_origen_app/utils/localizations.dart';
 import 'package:virtual_origen_app/utils/my_snackbar.dart';
 import 'package:virtual_origen_app/utils/storage_keys.dart';
@@ -57,7 +58,7 @@ class MyApp extends StatelessWidget {
           AuthServiceFirebase(),
           permanent: true,
         );
-        // Get.put(FormValidator(), permanent: true);
+        Get.put(FormValidator(), permanent: true);
         Get.put(MySnackbar(), permanent: true);
 
         Get.put(Secrets(), permanent: true);

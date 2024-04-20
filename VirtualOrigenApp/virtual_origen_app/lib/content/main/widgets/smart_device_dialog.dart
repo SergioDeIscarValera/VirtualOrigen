@@ -30,8 +30,8 @@ class SmartDeviceDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     var validator = Get.find<FormValidator>();
     return ResponsiveLayout(
-      mobile: Material(
-        type: MaterialType.transparency,
+      mobile: Dialog.fullscreen(
+        backgroundColor: Colors.transparent,
         child: Container(
           margin: const EdgeInsets.all(10),
           child: SmartDeviceDialogBody(
@@ -160,6 +160,7 @@ class SmartDeviceDialogBody extends StatelessWidget {
                 style: MyTextStyles.h2.textStyle.copyWith(
                   color: MyColors.CONTRARY.color,
                 ),
+                textAlign: TextAlign.center,
               ),
               const SizedBox(height: 20),
               // Name
