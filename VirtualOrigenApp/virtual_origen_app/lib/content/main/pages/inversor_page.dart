@@ -53,10 +53,6 @@ class InversorBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final displayCount =
-        context.width * 25 ~/ 2560 > controller.batteryData.length
-            ? controller.batteryData.length
-            : context.width * 25 ~/ 2560;
     return Expanded(
       child: Column(
         children: [
@@ -214,39 +210,81 @@ class InversorBody extends StatelessWidget {
                         ],
                       ),
                       const SizedBox(height: 10),
-                      SizedBox(
-                        width: double.infinity,
-                        height: 300,
-                        child: Obx(
-                          () => InversorChart(
-                            batteryData: controller.batteryData,
-                            gainData: controller.gainData,
-                            consumptionData: controller.consumptionData,
-                            dateData: controller.inversorYerserday
-                                .map((element) => element.dateTime)
-                                .toList(),
-                            leftTitle: "chart_battery_title".tr,
-                            bottomTitle: "chart_time_title".tr,
-                            displayCount: displayCount,
-                            offset: controller.offsetBatteryChart.value,
-                          ),
-                        ),
-                      ),
-                      Obx(
-                        () => Slider(
-                          value: controller.offsetBatteryChart.value.toDouble(),
-                          onChanged: (value) => controller
-                              .offsetBatteryChart.value = value.round(),
-                          min: displayCount.toDouble(),
-                          max: controller.batteryData.length.toDouble(),
-                          divisions:
-                              controller.batteryData.length - displayCount <= 0
+                      Obx(() {
+                        final displayCount = context.width * 25 ~/ 2560 >
+                                controller.inversorYerserday.length
+                            ? controller.inversorYerserday.length
+                            : context.width * 25 ~/ 2560;
+
+                        return Column(
+                          children: [
+                            SizedBox(
+                              width: double.infinity,
+                              height: 300,
+                              child: InversorChart(
+                                batteryData: controller.batteryData,
+                                gainData: controller.gainData,
+                                consumptionData: controller.consumptionData,
+                                dateData: controller.inversorYerserday
+                                    .map((element) => element.dateTime)
+                                    .toList(),
+                                leftTitle: "chart_battery_title".tr,
+                                bottomTitle: "chart_time_title".tr,
+                                displayCount: displayCount,
+                                offset: controller.offsetBatteryChart.value,
+                              ),
+                            ),
+                            Slider(
+                              value: controller.offsetBatteryChart.value
+                                  .toDouble(),
+                              onChanged: (value) => controller
+                                  .offsetBatteryChart.value = value.round(),
+                              min: displayCount.toDouble(),
+                              max: controller.batteryData.length.toDouble(),
+                              divisions: controller.batteryData.length -
+                                          displayCount <=
+                                      0
                                   ? 1
                                   : controller.batteryData.length -
                                       displayCount,
-                          activeColor: MyColors.LIGHT.color,
-                        ),
-                      ),
+                              activeColor: MyColors.LIGHT.color,
+                            )
+                          ],
+                        );
+                      }),
+                      // SizedBox(
+                      //   width: double.infinity,
+                      //   height: 300,
+                      //   child: Obx(
+                      //     () => InversorChart(
+                      //       batteryData: controller.batteryData,
+                      //       gainData: controller.gainData,
+                      //       consumptionData: controller.consumptionData,
+                      //       dateData: controller.inversorYerserday
+                      //           .map((element) => element.dateTime)
+                      //           .toList(),
+                      //       leftTitle: "chart_battery_title".tr,
+                      //       bottomTitle: "chart_time_title".tr,
+                      //       displayCount: displayCount,
+                      //       offset: controller.offsetBatteryChart.value,
+                      //     ),
+                      //   ),
+                      // ),
+                      // Obx(
+                      //   () => Slider(
+                      //     value: controller.offsetBatteryChart.value.toDouble(),
+                      //     onChanged: (value) => controller
+                      //         .offsetBatteryChart.value = value.round(),
+                      //     min: displayCount.toDouble(),
+                      //     max: controller.batteryData.length.toDouble(),
+                      //     divisions:
+                      //         controller.batteryData.length - displayCount <= 0
+                      //             ? 1
+                      //             : controller.batteryData.length -
+                      //                 displayCount,
+                      //     activeColor: MyColors.LIGHT.color,
+                      //   ),
+                      // ),
                     ],
                   ),
                 ),

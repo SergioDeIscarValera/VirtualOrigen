@@ -35,19 +35,53 @@ class SmartDevice {
     this.isOn = false,
   }) : id = id ?? const Uuid().v4();
 
-  copyWith(
-      {String? name,
-      SmartDeviceType? type,
-      MyColors? color,
-      List<DateTimeRange>? timeZones,
-      List<bool>? days,
-      Pair<int, int>? batteryRange,
-      Pair<int, int>? productionRange,
-      Pair<int, int>? consumptionRange,
-      Pair<int, int>? temperatureRange,
-      Pair<int, int>? rainRange,
-      bool? isManualMode,
-      bool? isOn}) {
+  SmartDevice.fromJson(Map<String, dynamic> json)
+      : id = json["id"],
+        name = json["name"],
+        type = SmartDeviceType.values
+            .firstWhere((element) => element.token == json["type"]),
+        color = MyColors.values
+            .firstWhere((element) => element.token == json["color"]),
+        timeZones = json["timeZones"]
+            .map<DateTimeRange>((e) => DateTimeRange(
+                  start: DateTime.parse(e.split(" -")[0]),
+                  end: DateTime.parse(e.split("- ")[1]),
+                ))
+            .toList(),
+        days = (json['days'] as List<dynamic>).cast<bool>(),
+        batteryRange = json.containsKey("batteryRange")
+            ? Pair.intFromString(json["batteryRange"])
+            : null,
+        productionRange = json.containsKey("productionRange")
+            ? Pair.intFromString(json["productionRange"])
+            : null,
+        consumptionRange = json.containsKey("consumptionRange")
+            ? Pair.intFromString(json["consumptionRange"])
+            : null,
+        temperatureRange = json.containsKey("temperatureRange")
+            ? Pair.intFromString(json["temperatureRange"])
+            : null,
+        rainRange = json.containsKey("rainRange")
+            ? Pair.intFromString(json["rainRange"])
+            : null,
+        isManualMode =
+            json.containsKey("isManualMode") ? json["isManualMode"] : false,
+        isOn = json["isOn"];
+
+  copyWith({
+    String? name,
+    SmartDeviceType? type,
+    MyColors? color,
+    List<DateTimeRange>? timeZones,
+    List<bool>? days,
+    Pair<int, int>? batteryRange,
+    Pair<int, int>? productionRange,
+    Pair<int, int>? consumptionRange,
+    Pair<int, int>? temperatureRange,
+    Pair<int, int>? rainRange,
+    bool? isManualMode,
+    bool? isOn,
+  }) {
     return SmartDevice(
       id: id,
       name: name ?? this.name,
@@ -63,5 +97,34 @@ class SmartDevice {
       isManualMode: isManualMode ?? this.isManualMode,
       isOn: isOn ?? this.isOn,
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    var map = {
+      "id": id,
+      "name": name,
+      "type": type.token,
+      "color": color.token,
+      "timeZones": timeZones.map((e) => e.toString()).toList(),
+      "days": days,
+      "isManualMode": isManualMode,
+      "isOn": isOn,
+    };
+    if (batteryRange != null) {
+      map["batteryRange"] = batteryRange!.toString();
+    }
+    if (productionRange != null) {
+      map["productionRange"] = productionRange!.toString();
+    }
+    if (consumptionRange != null) {
+      map["consumptionRange"] = consumptionRange!.toString();
+    }
+    if (temperatureRange != null) {
+      map["temperatureRange"] = temperatureRange!.toString();
+    }
+    if (rainRange != null) {
+      map["rainRange"] = rainRange!.toString();
+    }
+    return map;
   }
 }

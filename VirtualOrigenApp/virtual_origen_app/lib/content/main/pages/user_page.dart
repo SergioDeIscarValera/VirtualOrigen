@@ -90,6 +90,12 @@ class UserBody extends StatelessWidget {
                               width: 200,
                               height: 200,
                               fit: BoxFit.cover,
+                              errorBuilder: (context, error, stackTrace) =>
+                                  Icon(
+                                Icons.error_outline_rounded,
+                                color: MyColors.CONTRARY.color,
+                                size: 150,
+                              ),
                             );
                           }
                         },
@@ -129,7 +135,12 @@ class UserBody extends StatelessWidget {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 30),
+                  const SizedBox(height: 15),
+                  Divider(
+                    color: MyColors.CONTRARY.color,
+                    thickness: 2,
+                  ),
+                  const SizedBox(height: 15),
                   Obx(
                     () => ExpansionTile(
                       title: Text(
@@ -266,6 +277,42 @@ class UserBody extends StatelessWidget {
                           .toList(),
                     ),
                   ),
+                  const SizedBox(height: 15),
+                  Divider(
+                    color: MyColors.CONTRARY.color,
+                    thickness: 2,
+                  ),
+                  const SizedBox(height: 15),
+                  Wrap(
+                    spacing: 10,
+                    children: [
+                      RoundedButton(
+                        onPressed: controller.signOut,
+                        color: MyColors.DANGER,
+                        textColor: MyColors.LIGHT,
+                        text: "sign_out".tr,
+                        icon: Icons.logout,
+                        isSmall: context.width < 550,
+                      ),
+                      RoundedButton(
+                        onPressed: controller.changeTheme,
+                        color: MyColors.CONTRARY,
+                        textColor: MyColors.CURRENT,
+                        text: "change_theme".tr,
+                        icon:
+                            Get.isDarkMode ? Icons.light_mode : Icons.dark_mode,
+                        isSmall: context.width < 550,
+                      ),
+                      RoundedButton(
+                        onPressed: controller.changeLanguage,
+                        color: MyColors.CONTRARY,
+                        textColor: MyColors.CURRENT,
+                        text: "change_language".tr,
+                        icon: Icons.translate,
+                        isSmall: context.width < 550,
+                      ),
+                    ],
+                  )
                 ],
               ),
             ),

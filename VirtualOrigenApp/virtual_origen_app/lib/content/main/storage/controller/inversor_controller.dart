@@ -3,14 +3,12 @@ import 'package:get/get.dart';
 import 'package:virtual_origen_app/models/inversor_now.dart';
 import 'package:virtual_origen_app/models/inversor_yesterday.dart';
 import 'package:virtual_origen_app/models/property.dart';
-import 'package:virtual_origen_app/services/auth/interface_auth_service.dart';
 import 'package:virtual_origen_app/services/repository/inversor_now/inversor_now_firebase_repository.dart';
 import 'package:virtual_origen_app/services/repository/inversor_yesterday/inversor_yesterday_firebase_repository.dart';
 
 class InversorController extends GetxController {
   late InversorNowFirebaseRepository _inversorNowRepository;
   late InversorYerserdayFirebaseRepository _inversorYerserdayRepository;
-  late IAuthService _authService;
 
   final Rx<Property> propertySelected = Property.defaultConstructor().obs;
   Rx<InversorNow> inversorNow = InversorNow.defaultConstructor().obs;
@@ -22,7 +20,6 @@ class InversorController extends GetxController {
 
   @override
   void onInit() {
-    _authService = Get.find<IAuthService>();
     _inversorNowRepository = Get.find<InversorNowFirebaseRepository>();
     _inversorYerserdayRepository =
         Get.find<InversorYerserdayFirebaseRepository>();
@@ -62,7 +59,7 @@ class InversorController extends GetxController {
 
   void _setUpInversorYerserday() {
     _inversorYerserdayRepository.addListener(
-      idc: _authService.getUid(),
+      idc: propertySelected.value.id,
       listener: (value) {
         inversorYerserday.value = value;
       },

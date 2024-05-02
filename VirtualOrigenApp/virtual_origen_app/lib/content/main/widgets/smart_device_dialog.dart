@@ -17,15 +17,17 @@ import 'package:virtual_origen_app/widgets/my_multi_time_picker.dart';
 import 'my_range_expansion.dart';
 
 class SmartDeviceDialog extends StatelessWidget {
-  const SmartDeviceDialog(
-      {Key? key,
-      this.smartDevice,
-      required this.onSave,
-      required this.onDelete})
-      : super(key: key);
+  const SmartDeviceDialog({
+    Key? key,
+    this.smartDevice,
+    required this.onSave,
+    required this.onDelete,
+    this.restrict = false,
+  }) : super(key: key);
   final SmartDevice? smartDevice;
   final Function(SmartDevice) onSave;
   final Function(SmartDevice) onDelete;
+  final bool restrict;
   @override
   Widget build(BuildContext context) {
     var validator = Get.find<FormValidator>();
@@ -39,6 +41,7 @@ class SmartDeviceDialog extends StatelessWidget {
             smartDevice: smartDevice,
             onSave: onSave,
             onDelete: onDelete,
+            restrict: restrict,
           ),
         ),
       ),
@@ -48,6 +51,7 @@ class SmartDeviceDialog extends StatelessWidget {
           smartDevice: smartDevice,
           onSave: onSave,
           onDelete: onDelete,
+          restrict: restrict,
         ),
       ),
       desktop: WrapInMid(
@@ -57,6 +61,7 @@ class SmartDeviceDialog extends StatelessWidget {
             smartDevice: smartDevice,
             onSave: onSave,
             onDelete: onDelete,
+            restrict: restrict,
           ),
         ),
       ),
@@ -71,11 +76,13 @@ class SmartDeviceDialogBody extends StatelessWidget {
     this.smartDevice,
     required this.onSave,
     required this.onDelete,
+    required this.restrict,
   }) : super(key: key);
   final FormValidator validator;
   final SmartDevice? smartDevice;
   final Function(SmartDevice) onSave;
   final Function(SmartDevice) onDelete;
+  final bool restrict;
   @override
   Widget build(BuildContext context) {
     var formKey = GlobalKey<FormState>();
@@ -170,6 +177,7 @@ class SmartDeviceDialogBody extends StatelessWidget {
                 label: "smart_device_name".tr,
                 color: MyColors.CONTRARY,
                 validator: (text) => validator.isValidText(text, 150),
+                editable: !restrict,
               ),
               const SizedBox(height: 20),
               // Color
@@ -178,6 +186,7 @@ class SmartDeviceDialogBody extends StatelessWidget {
                   child: ColorDropdown(
                     onChanged: (value) => color.value = value!,
                     value: color.value,
+                    editable: !restrict,
                   ),
                 ),
               ),
@@ -188,6 +197,7 @@ class SmartDeviceDialogBody extends StatelessWidget {
                   child: SmartDeviceTypeDropdown(
                     onChanged: (value) => smartDeviceType.value = value!,
                     value: smartDeviceType.value,
+                    editable: !restrict,
                   ),
                 ),
               ),

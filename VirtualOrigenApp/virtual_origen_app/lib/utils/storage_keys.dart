@@ -1,6 +1,7 @@
 enum StorageKeys {
   THEME_MODE,
   IS_FIRST_TIME,
+  LANGUAGE,
 }
 
 extension StorageKeysExten on StorageKeys {
@@ -10,6 +11,8 @@ extension StorageKeysExten on StorageKeys {
         return "THEME_MODE";
       case StorageKeys.IS_FIRST_TIME:
         return "IS_FIRST_TIME";
+      case StorageKeys.LANGUAGE:
+        return "LANGUAGE";
     }
   }
 }

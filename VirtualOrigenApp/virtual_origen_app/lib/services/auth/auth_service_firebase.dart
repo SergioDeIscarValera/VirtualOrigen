@@ -91,7 +91,7 @@ class AuthServiceFirebase implements IAuthService {
   @override
   String getProfileImage() => _auth.currentUser?.photoURL ?? '';
   @override
-  String getUid() => _auth.currentUser!.uid;
+  String getUid() => _auth.currentUser?.uid ?? "";
 
   @override
   bool? isEmailVerified() {

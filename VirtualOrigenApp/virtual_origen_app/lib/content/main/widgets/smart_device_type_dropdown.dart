@@ -9,9 +9,11 @@ class SmartDeviceTypeDropdown extends StatelessWidget {
     Key? key,
     required this.onChanged,
     required this.value,
+    this.editable = true,
   }) : super(key: key);
   final void Function(SmartDeviceType?) onChanged;
   final SmartDeviceType value;
+  final bool editable;
   @override
   Widget build(BuildContext context) {
     return DropdownButton(
@@ -33,7 +35,9 @@ class SmartDeviceTypeDropdown extends StatelessWidget {
             ),
           )
           .toList(),
-      onChanged: onChanged,
+      onChanged: (value) {
+        if (editable) onChanged(value);
+      },
       value: value,
       isExpanded: true,
       borderRadius: BorderRadius.circular(12),

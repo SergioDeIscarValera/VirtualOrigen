@@ -7,17 +7,16 @@ class InversorYerserdayFirebaseRepository
   String get collectionName => "inversor_yesterday";
 
   @override
-  String get idName => "dateTime";
+  String get idName => "datetime";
 
   @override
-  String get listName => "properties";
+  String get listName => "data";
 
   @override
   InversorYerserday fromJson(Map<String, dynamic> json) {
     return InversorYerserday(
-      propertyId: json["propertyId"],
-      dateTime: DateTime.parse(json["dateTime"]),
-      battery: json["battery"],
+      dateTime: DateTime.parse(json["datetime"].toString()),
+      battery: double.parse(json["battery"].toString()),
       consumption: json["consumption"],
       gain: json["gain"],
     );

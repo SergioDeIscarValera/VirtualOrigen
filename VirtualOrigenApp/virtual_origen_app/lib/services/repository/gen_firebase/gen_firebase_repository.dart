@@ -1,6 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
-
 import 'package:virtual_origen_app/services/repository/gen_firebase/gen_firebase_repository_only_get.dart';
 import 'package:virtual_origen_app/services/repository/interface_listener_repository.dart';
 
@@ -82,9 +80,8 @@ abstract class GenFirebaseRepository<T, ID>
     }
     var data = docRef.value!.data() as Map<String, dynamic>;
     var oldEntities = data[listName] as List<dynamic>;
-    oldEntities.removeWhere((element) => entities
-        .map((e) => jsonDecode(e as dynamic)[idName])
-        .contains(jsonDecode(element)[idName]));
+    oldEntities.removeWhere((element) =>
+        entities.map((e) => toJson(e)[idName]).contains(element[idName]));
     oldEntities.addAll(entities.map((e) => toJson(e)).toList());
     await docRef.key.update({listName: oldEntities});
     return entities;

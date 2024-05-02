@@ -4,6 +4,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:get/get.dart';
 import 'package:virtual_origen_app/content/main/storage/controller/property_controller.dart';
 import 'package:virtual_origen_app/content/main/widgets/dotted_card.dart';
+import 'package:virtual_origen_app/content/main/widgets/scene_card.dart';
 import 'package:virtual_origen_app/content/main/widgets/smart_device_card.dart';
 import 'package:virtual_origen_app/content/main/widgets/user_header.dart';
 import 'package:virtual_origen_app/models/invitation_permission.dart';
@@ -23,7 +24,11 @@ class PropertyPage extends StatelessWidget {
   Widget build(BuildContext context) {
     var controller = Get.find<PropertyController>();
     var authService = Get.find<IAuthService>();
-    final args = Get.arguments as Map<String, dynamic>;
+    final args = Get.arguments as Map<String, dynamic>?;
+    if (args == null) {
+      Get.back();
+      return const SizedBox();
+    }
     var propertySelected = args.containsKey('property')
         ? Get.arguments['property'] as Property
         : null;
@@ -155,7 +160,7 @@ class PropertyBody extends StatelessWidget {
                         .toList(),
                   );
                 }),
-                const SizedBox(height: 15),
+                const SizedBox(height: 30),
                 Obx(() {
                   if (controller.propertySelected.value
                               .getPermission(authService.getEmail()) !=
@@ -164,9 +169,58 @@ class PropertyBody extends StatelessWidget {
                     return const SizedBox();
                   }
                   return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "guests_titles".tr,
+                        "guest_title".tr,
+                        style: MyTextStyles.h3.textStyle,
+                      ),
+                      const SizedBox(height: 15),
+                      Center(
+                        child: Wrap(
+                          alignment: WrapAlignment.center,
+                          spacing: 15,
+                          children: [
+                            ...controller.propertySelected.value.guests
+                                .map((propertyGuest) => PropertyGuestCard(
+                                      propertyGuest: propertyGuest,
+                                      onPermissionChange:
+                                          controller.changeGuestPermission,
+                                      onRemove: controller.removeGuest,
+                                    )),
+                            Tooltip(
+                              message: "add_guest".tr,
+                              child: MouseRegion(
+                                cursor: SystemMouseCursors.click,
+                                child: GestureDetector(
+                                  onTap: controller.openInvitationDialog,
+                                  child: SizedBox(
+                                    height: 70,
+                                    width: 70,
+                                    child: DottedBorder(
+                                      color: MyColors.CONTRARY.color,
+                                      radius: const Radius.circular(75),
+                                      borderType: BorderType.RRect,
+                                      dashPattern: const [8, 4],
+                                      strokeWidth: 2,
+                                      child: Center(
+                                        child: Icon(
+                                          Icons.add,
+                                          color: MyColors.CONTRARY.color,
+                                          size: 40,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 30),
+                      Text(
+                        "scene_title".tr,
                         style: MyTextStyles.h3.textStyle,
                       ),
                       const SizedBox(height: 15),
@@ -174,42 +228,37 @@ class PropertyBody extends StatelessWidget {
                         alignment: WrapAlignment.center,
                         spacing: 15,
                         children: [
-                          ...controller.propertySelected.value.guests
-                              .map((propertyGuest) => PropertyGuestCard(
-                                    propertyGuest: propertyGuest,
-                                    onPermissionChange:
-                                        controller.changeGuestPermission,
-                                    onRemove: controller.removeGuest,
-                                  )),
+                          ...controller.scenes.map(
+                            (scene) => SceneCard(
+                              scene: scene,
+                              onLongPress: (value) =>
+                                  controller.openSceneDialog(scene: value),
+                              onTapDevice: (value, value2) =>
+                                  controller.editSceneDeviceDialog(
+                                scene: value,
+                                smartDevice: value2,
+                              ),
+                              onTapNewDevice: (value) =>
+                                  controller.openSceneDeviceDialog(
+                                scene: value,
+                              ),
+                              applyScene: (value) => controller.applyScene(
+                                scene: value,
+                              ),
+                            ),
+                          ),
                           Tooltip(
-                            message: "add_guest".tr,
-                            child: MouseRegion(
-                              cursor: SystemMouseCursors.click,
-                              child: GestureDetector(
-                                onTap: controller.openInvitationDialog,
-                                child: SizedBox(
-                                  height: 70,
-                                  width: 70,
-                                  child: DottedBorder(
-                                    color: MyColors.CONTRARY.color,
-                                    radius: const Radius.circular(75),
-                                    borderType: BorderType.RRect,
-                                    dashPattern: const [8, 4],
-                                    strokeWidth: 2,
-                                    child: Center(
-                                      child: Icon(
-                                        Icons.add,
-                                        color: MyColors.CONTRARY.color,
-                                        size: 40,
-                                      ),
-                                    ),
-                                  ),
-                                ),
+                            message: "add_scene".tr,
+                            child: SizedBox(
+                              height: 170,
+                              child: DottedCard(
+                                onTap: controller.openSceneDialog,
                               ),
                             ),
                           ),
                         ],
                       ),
+                      const SizedBox(height: 15),
                     ],
                   );
                 }),

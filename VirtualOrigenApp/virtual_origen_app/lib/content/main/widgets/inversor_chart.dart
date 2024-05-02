@@ -34,6 +34,7 @@ class InversorChart extends StatelessWidget {
     final consumptionDisplay =
         _refortmatList(consumptionData, offset, displayCount);
     final displayedDateData = dateData.sublist(offset - displayCount, offset);
+
     return LineChart(
       curve: Curves.easeInOut,
       duration: const Duration(milliseconds: 0),

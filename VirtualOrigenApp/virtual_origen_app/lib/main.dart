@@ -36,8 +36,10 @@ class MyApp extends StatelessWidget {
   const MyApp({super.key});
   @override
   Widget build(BuildContext context) {
+    final localStorage = Get.find<ILocalStorage>();
     var userThemeConfig =
-        Get.find<ILocalStorage>().getData<bool>(StorageKeys.THEME_MODE.key);
+        localStorage.getData<bool>(StorageKeys.THEME_MODE.key);
+    var userLanguage = localStorage.getData<String>(StorageKeys.LANGUAGE.key);
     return GetMaterialApp(
       title: 'Virtual Origen App',
       debugShowCheckedModeBanner: false,
@@ -79,7 +81,8 @@ class MyApp extends StatelessWidget {
       ),
 
       translations: MyLocalizations(),
-      locale: Get.deviceLocale,
+      //locale: Get.deviceLocale,
+      locale: userLanguage == null ? Get.deviceLocale : Locale(userLanguage),
       fallbackLocale: const Locale('en', 'US'),
     );
   }
