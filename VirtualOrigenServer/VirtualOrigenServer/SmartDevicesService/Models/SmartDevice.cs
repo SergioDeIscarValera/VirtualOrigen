@@ -50,8 +50,15 @@ public class SmartDevice
     [property: JsonPropertyName("isOn")]
     public bool IsOn { get; private set; }
 
+    [FirestoreProperty(name: "type")]
+    [property: JsonPropertyName("type")]
+    public string Type { get; private set; }
+    [FirestoreProperty(name: "color")]
+    [property: JsonPropertyName("color")]
+    public string Color { get; private set; }
+
     [JsonConstructor]
-    public SmartDevice(string id, string name, List<string> timeZones, List<bool> days, bool isManualMode, bool isOn, string? batteryRange = null, string? productionRange = null, string? consumptionRange = null, string? temperatureRange = null, string? rainRange = null)
+    public SmartDevice(string id, string name, List<string> timeZones, List<bool> days, bool isManualMode, bool isOn, string? batteryRange = null, string? productionRange = null, string? consumptionRange = null, string? temperatureRange = null, string? rainRange = null, string type = "other", string color = "primary")
     {
         Id = id;
         Name = name;
@@ -64,6 +71,8 @@ public class SmartDevice
         RainRange = rainRange;
         IsManualMode = isManualMode;
         IsOn = isOn;
+        Type = type;
+        Color = color;
     }
 
     public SmartDevice(Dictionary<string, object> data)
@@ -79,6 +88,8 @@ public class SmartDevice
         RainRange = data.ContainsKey("rainRange") ? data["rainRange"] as string : null;
         IsManualMode = data["isManualMode"] as bool? ?? false;
         IsOn = data["isOn"] as bool? ?? false;
+        Type = data.TryGetValue("type", out value) ? value as string : "other";
+        Color = data.TryGetValue("color", out value) ? value as string : "primary";
     }
 
     public SmartDevice()
@@ -94,6 +105,8 @@ public class SmartDevice
         RainRange = null;
         IsManualMode = false;
         IsOn = false;
+        Type = "other";
+        Color = "primary";
     }
 
     public void SetIsOn(bool isOn)
@@ -110,7 +123,9 @@ public class SmartDevice
             { "timeZones", TimeZones },
             { "days", Days },
             { "isManualMode", IsManualMode },
-            { "isOn", IsOn }
+            { "isOn", IsOn },
+            { "type", Type },
+            { "color", Color }
         };
         if (BatteryRange != null)
         {
