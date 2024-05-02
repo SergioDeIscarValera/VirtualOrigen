@@ -103,10 +103,10 @@ internal class PropertyHourWeatherRepositoryFirebase : IPropertyHourWeatherRepos
     public async Task<PropertyHourWeather> SaveAsync(PropertyHourWeather entity, string idc)
     {
         var list = await GetListAsync(idc) ?? [];
-        if (await ExistsAsync(entity.DateTimeDate, idc))
-        {
-            list.RemoveAll(x => entity.DateTimeDate.Ticks >= x.DateTimeDate.Ticks && entity.DateTimeDate.Ticks <= x.DateTimeEndDate.Ticks);
-        }
+        //if (await ExistsAsync(entity.DateTimeDate, idc))
+        //{
+        //    list.RemoveAll(x => entity.DateTimeDate.Ticks >= x.DateTimeDate.Ticks && entity.DateTimeDate.Ticks <= x.DateTimeEndDate.Ticks);
+        //}
         list.Add(entity);
         var snapshot = await GetSnapshotAsync(idc);
         if (snapshot == null)

@@ -29,14 +29,14 @@ public class WeatherMapper
                     dateTime: DateTime.Parse(item.dt_txt).AddHours(-3).ToString("yyyy-MM-dd HH:mm:ss"),
                     dateTimeEnd: item.dt_txt,
                     temperature: item.main.temp,
-                    temperatureMin: item.main.temp,
-                    temperatureMax: item.main.temp,
+                    temperatureMin: item.main.temp_min,
+                    temperatureMax: item.main.temp_max,
                     humidity: item.main.humidity,
                     clouds: item.clouds.all,
                     windSpeed: item.wind.speed,
                     rainProbability: item.pop,
-                    weatherType: item.weather.First().main,
-                    weatherIconUrl: $"https://openweathermap.org/img/wn/{item.weather.First().icon}@2x.png"
+                    weatherType: item.weather[0].main,
+                    weatherIconUrl: $"https://openweathermap.org/img/wn/{item.weather[0].icon}@2x.png"
                 )
             );
         }

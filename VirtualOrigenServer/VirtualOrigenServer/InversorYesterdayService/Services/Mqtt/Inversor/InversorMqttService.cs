@@ -1,10 +1,10 @@
-﻿using InversorNowService.Models;
+﻿using InversorYesterdayService.Models;
 using MQTTnet;
 using MQTTnet.Client;
 using MQTTnet.Server;
 using System.Text;
 
-namespace InversorNowService.Services.Mqtt.Inversor;
+namespace InversorYesterdayService.Services.Mqtt.Inversor;
 
 public class InversorMqttService : IMqttService<InversorData>
 {
@@ -15,9 +15,9 @@ public class InversorMqttService : IMqttService<InversorData>
     public IMqttClient mqttClient { get; private set; }
     private InversorMqttService()
     {
-        _topic = Environment.GetEnvironmentVariable("MQTT_TOPIC") ?? "resumen";
+        _topic = Environment.GetEnvironmentVariable("MQTT_TOPIC") ?? "inversor";
         _brokerIp = Environment.GetEnvironmentVariable("MQTT_BROKER_IP") ?? "localhost";
-        _clientId = Environment.GetEnvironmentVariable("MQTT_CLIENT_ID") ?? "inversor_yesterday_service";
+        _clientId = Environment.GetEnvironmentVariable("MQTT_CLIENT_ID") ?? "inversor_now_service";
 
         options = new MqttClientOptionsBuilder()
             .WithTcpServer(_brokerIp)
@@ -62,9 +62,8 @@ public class InversorMqttService : IMqttService<InversorData>
             Console.WriteLine($" - Topic = {e.ApplicationMessage.Topic}");
             Console.WriteLine($" - Payload = {payload}\n\n");
             var split = payload.Split(',');
-            var inversorData = new InversorData(int.Parse(split[2]), int.Parse(split[1]), int.Parse(split[3]));
-
-            onMessageReceived?.Invoke(inversorData);
+            var data = new InversorData(int.Parse(split[2]), int.Parse(split[1]), int.Parse(split[3]), split[0]);
+            onMessageReceived?.Invoke(data);
         });
     }
 

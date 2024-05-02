@@ -4,8 +4,8 @@ namespace SmartDevicesService.Utils;
 
 public class SmartDeviceValidator
 {
-    public delegate Task<InversorData> InversorDataDelegate(string id);
-    public delegate Task<PropertyHourWeather> PropertyHourWeatherDelegate(DateTime id, string idc);
+    public delegate Task<InversorData?> InversorDataDelegate(string id);
+    public delegate Task<PropertyHourWeather?> PropertyHourWeatherDelegate(DateTime id, string idc);
     static public async Task<bool> SmartDeviceValidate(
         SmartDevice device,
         InversorDataDelegate inversorDataDelegate,
@@ -17,6 +17,7 @@ public class SmartDeviceValidator
         // Manually mode
         if (device.IsManualMode)
         {
+            Console.WriteLine("Manual mode");
             return true;
         }
         // Days
@@ -24,34 +25,36 @@ public class SmartDeviceValidator
         var dayDevice = NewDayListFormatted(device.Days);
         if (!dayDevice[day])
         {
-
+            Console.WriteLine("Day not allowed");
             return false;
         }
         // Time
         // Check if the current time is in the time range
         if (!CheckTimeRange(now, device.TimeZones))
         {
+            Console.WriteLine("Time not allowed");
             return false;
         }
         // Other conditions
         if (device.TemperatureRange != null || device.RainRange != null)
         {
-            //var weather = await propertyHourWeatherRepository.GetByIdAsync(now, propertyId);
             var weather = await propertyHourWeatherDelegate(now, propertyId);
             if (!CheckWeather(device, weather))
             {
+                Console.WriteLine("Weather not allowed");
                 return false;
             }
         }
         if (device.BatteryRange != null || device.ProductionRange != null || device.ConsumptionRange != null)
         {
-            //var propertyWeather = await inversorNowRepository.GetByIdcAsync(propertyId);
             var propertyWeather = await inversorDataDelegate(propertyId);
             if (!CheckInversorNow(device, propertyWeather))
             {
+                Console.WriteLine("Inversor now not allowed");
                 return false;
             }
         }
+        Console.WriteLine("All conditions are met");
         return true;
     }
 

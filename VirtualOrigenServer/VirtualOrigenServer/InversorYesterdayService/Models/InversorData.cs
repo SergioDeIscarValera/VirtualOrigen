@@ -1,7 +1,7 @@
 ﻿using Google.Cloud.Firestore;
 using Newtonsoft.Json;
 
-namespace SmartDevicesService.Models;
+namespace InversorYesterdayService.Models;
 
 [FirestoreData]
 public class InversorData
@@ -18,19 +18,17 @@ public class InversorData
     [property: JsonProperty("gain")]
     public int Gain { get; private set; }
 
+    [FirestoreProperty(name: "datetime")]
+    [property: JsonProperty("datetime")]
+    public string DateTime { get; private set; }
+
     [JsonConstructor]
-    public InversorData(int battery, int consumption, int gain)
+    public InversorData(int battery, int consumption, int gain, string datetime)
     {
         Battery = battery;
         Consumption = consumption;
         Gain = gain;
-    }
-
-    public InversorData(Dictionary<string, object> data)
-    {
-        Battery = int.Parse(data["battery"].ToString());
-        Consumption = int.Parse(data["consumption"].ToString());
-        Gain = int.Parse(data["gain"].ToString());
+        DateTime = System.DateTime.Parse(datetime).ToString("yyyy-MM-dd HH:mm");
     }
 
     public InversorData()
@@ -38,10 +36,21 @@ public class InversorData
         Battery = 0;
         Consumption = 0;
         Gain = 0;
+        DateTime = "2000-01-01 00:00";
     }
+
+    public InversorData(Dictionary<string, object> data)
+    {
+        Battery = int.Parse(data["battery"].ToString());
+        Consumption = int.Parse(data["consumption"].ToString());
+        Gain = int.Parse(data["gain"].ToString());
+        DateTime = data["datetime"].ToString();
+    }
+
+    public DateTime GetDateTime() => System.DateTime.Parse(DateTime);
 
     override public string ToString()
     {
-        return $"{Consumption},{Battery},{Gain}";
+        return $"{DateTime}:{Consumption},{Battery},{Gain}";
     }
 }

@@ -100,4 +100,38 @@ public class SmartDevice
     {
         IsOn = isOn;
     }
+
+    public Dictionary<string, object> keyValues()
+    {
+        var data = new Dictionary<string, object>
+        {
+            { "id", Id },
+            { "name", Name },
+            { "timeZones", TimeZones },
+            { "days", Days },
+            { "isManualMode", IsManualMode },
+            { "isOn", IsOn }
+        };
+        if (BatteryRange != null)
+        {
+            data.Add("batteryRange", BatteryRange);
+        }
+        if (ProductionRange != null)
+        {
+            data.Add("productionRange", ProductionRange);
+        }
+        if (ConsumptionRange != null)
+        {
+            data.Add("consumptionRange", ConsumptionRange);
+        }
+        if (TemperatureRange != null)
+        {
+            data.Add("temperatureRange", TemperatureRange);
+        }
+        if (RainRange != null)
+        {
+            data.Add("rainRange", RainRange);
+        }
+        return data;
+    }
 }

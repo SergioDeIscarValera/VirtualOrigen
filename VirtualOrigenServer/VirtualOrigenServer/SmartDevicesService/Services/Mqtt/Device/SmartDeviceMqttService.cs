@@ -14,8 +14,7 @@ public class SmartDeviceMqttService
     public SmartDeviceMqttService()
     {
         _topic = Environment.GetEnvironmentVariable("MQTT_TOPIC") ?? "smart_devices";
-        //_brokerIp = Environment.GetEnvironmentVariable("MQTT_BROKER_IP") ?? "localhost";
-        _brokerIp = "192.168.195.199";
+        _brokerIp = Environment.GetEnvironmentVariable("MQTT_BROKER_IP") ?? "localhost";
         _clientId = Environment.GetEnvironmentVariable("MQTT_CLIENT_ID") ?? "smart_devices_service";
 
         options = new MqttClientOptionsBuilder()
@@ -44,6 +43,7 @@ public class SmartDeviceMqttService
     public async Task PublishDeviceStateAsync(SmartDevice device)
     {
         var message = device.IsOn ? "1" : "0";
+        Console.WriteLine($"Publishing: {message} ({_topic}/{device.Id})");
         var applicationMessage = new MqttApplicationMessageBuilder()
           .WithTopic($"{_topic}/{device.Id}")
           .WithPayload(message)
