@@ -3,7 +3,7 @@ using InversorNowService.Services.Mqtt;
 using InversorNowService.Services.Mqtt.Inversor;
 using InversorNowService.Services.Repository.Inversor;
 
-Console.WriteLine("InversorNowService v1.0");
+Console.WriteLine("InversorNowService v1.1");
 IMqttService<InversorData> mqttService = InversorMqttService.Instance;
 var inversorDataRepository = InversorDataRepository.Instance;
 // 1 -> Suscribirse al servicio MQTT

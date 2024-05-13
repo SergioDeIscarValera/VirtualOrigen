@@ -17,7 +17,7 @@ public class InversorMqttService : IMqttService<InversorData>
     {
         _topic = Environment.GetEnvironmentVariable("MQTT_TOPIC") ?? "resumen";
         _brokerIp = Environment.GetEnvironmentVariable("MQTT_BROKER_IP") ?? "localhost";
-        _clientId = Environment.GetEnvironmentVariable("MQTT_CLIENT_ID") ?? "inversor_yesterday_service";
+        _clientId = Environment.GetEnvironmentVariable("MQTT_CLIENT_ID") ?? "inversor_now_service";
 
         options = new MqttClientOptionsBuilder()
             .WithTcpServer(_brokerIp)
@@ -26,7 +26,7 @@ public class InversorMqttService : IMqttService<InversorData>
         mqttClient = new MqttFactory().CreateMqttClient();
         mqttClient.ConnectedAsync += async e =>
         {
-            Console.WriteLine("MQTT connected\n");
+            Console.WriteLine($"MQTT connected\n\t- Host: {_brokerIp}\n\t- Topic: {_topic}\n\t- Time: {GetDateTime()}\n");
             await mqttClient.SubscribeAsync(new MqttTopicFilterBuilder().WithTopic(_topic).Build());
         };
 
@@ -57,12 +57,12 @@ public class InversorMqttService : IMqttService<InversorData>
         mqttClient.ApplicationMessageReceivedAsync += (async e =>
         {
             var payload = Encoding.UTF8.GetString(e.ApplicationMessage.PayloadSegment);
-            var now = DateTime.Now;
-            Console.WriteLine($"Received MQTT message - {now}");
+
+            Console.WriteLine($"Received MQTT message - {GetDateTime()}");
             Console.WriteLine($" - Topic = {e.ApplicationMessage.Topic}");
             Console.WriteLine($" - Payload = {payload}\n\n");
             var split = payload.Split(',');
-            var inversorData = new InversorData(int.Parse(split[2]), int.Parse(split[1]), int.Parse(split[3]));
+            var inversorData = new InversorData(int.Parse(split[1]), int.Parse(split[0]), int.Parse(split[2]));
 
             onMessageReceived?.Invoke(inversorData);
         });
@@ -76,5 +76,13 @@ public class InversorMqttService : IMqttService<InversorData>
     public async Task StartAsync()
     {
         await mqttClient.ConnectAsync(options, CancellationToken.None);
+    }
+
+    private static DateTime GetDateTime()
+    {
+        DateTime utcNow = DateTime.UtcNow;
+        var timeZone = Environment.GetEnvironmentVariable("TIME_ZONE") ?? "Europe/Madrid";
+        TimeZoneInfo timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById(timeZone);
+        return TimeZoneInfo.ConvertTimeFromUtc(utcNow, timeZoneInfo);
     }
 }

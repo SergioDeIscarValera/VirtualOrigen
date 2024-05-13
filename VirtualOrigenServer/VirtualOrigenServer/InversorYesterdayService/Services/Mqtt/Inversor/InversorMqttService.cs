@@ -57,7 +57,10 @@ public class InversorMqttService : IMqttService<InversorData>
         mqttClient.ApplicationMessageReceivedAsync += (async e =>
         {
             var payload = Encoding.UTF8.GetString(e.ApplicationMessage.PayloadSegment);
-            var now = DateTime.Now;
+            DateTime utcNow = DateTime.UtcNow;
+            var timeZone = Environment.GetEnvironmentVariable("TIME_ZONE") ?? "Europe/Madrid";
+            TimeZoneInfo timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById(timeZone);
+            DateTime now = TimeZoneInfo.ConvertTimeFromUtc(utcNow, timeZoneInfo);
             Console.WriteLine($"Received MQTT message - {now}");
             Console.WriteLine($" - Topic = {e.ApplicationMessage.Topic}");
             Console.WriteLine($" - Payload = {payload}\n\n");
