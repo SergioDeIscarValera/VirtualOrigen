@@ -1,4 +1,4 @@
-package com.example.virtual_origen_app
+package com.elpollo.virtual_origen_app
 
 import io.flutter.embedding.android.FlutterActivity
 
