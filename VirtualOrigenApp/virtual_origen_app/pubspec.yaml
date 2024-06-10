@@ -1,0 +1,45 @@
+name: virtual_origen_app
+description: "Aplicación para la gestión eficiente de energía gestión en fincas con placas solares."
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.2.1 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.2
+  get: ^4.6.6
+  get_storage: ^2.1.1
+  fl_chart: ^0.66.2
+  http: ^1.2.0
+  firebase_core: ^2.29.0
+  firebase_auth: ^4.19.1
+  firebase_storage: ^11.7.1
+  google_sign_in: ^6.2.1
+  cloud_firestore: ^4.16.1
+  dotted_border: ^2.1.0
+  smooth_page_indicator: ^1.1.0
+  google_maps_flutter: ^2.6.0
+  uuid: ^4.3.3
+  flutter_animate: ^4.5.0
+  intl: ^0.19.0
+  image_picker: ^1.0.8
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^2.0.0
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/
+    - assets/images/
+    - assets/fonts/
+  fonts:
+    - family: VarelaRound
+      fonts:
+        - asset: assets/fonts/VarelaRound-Regular.ttf
+          weight: 400
