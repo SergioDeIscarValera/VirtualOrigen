@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 
 enum SmartDeviceType {
   LIGHT,
+  SWITCH,
   BOILER,
   AIR_CONDITIONER,
-  HEADER,
   IRRIGATION,
-  OTHER
+  OTHER,
 }
 
 extension SmartDeviceTypeExtension on SmartDeviceType {
@@ -14,12 +14,12 @@ extension SmartDeviceTypeExtension on SmartDeviceType {
     switch (this) {
       case SmartDeviceType.LIGHT:
         return 'light';
+      case SmartDeviceType.SWITCH:
+        return 'switch';
       case SmartDeviceType.BOILER:
         return 'boiler';
       case SmartDeviceType.AIR_CONDITIONER:
         return 'air_conditioner';
-      case SmartDeviceType.HEADER:
-        return 'header';
       case SmartDeviceType.IRRIGATION:
         return 'irrigation';
       case SmartDeviceType.OTHER:
@@ -31,12 +31,12 @@ extension SmartDeviceTypeExtension on SmartDeviceType {
     switch (this) {
       case SmartDeviceType.LIGHT:
         return Icons.lightbulb;
+      case SmartDeviceType.SWITCH:
+        return Icons.power_settings_new;
       case SmartDeviceType.BOILER:
         return Icons.fireplace;
       case SmartDeviceType.AIR_CONDITIONER:
         return Icons.air;
-      case SmartDeviceType.HEADER:
-        return Icons.water;
       case SmartDeviceType.IRRIGATION:
         return Icons.water_drop_outlined;
       case SmartDeviceType.OTHER:

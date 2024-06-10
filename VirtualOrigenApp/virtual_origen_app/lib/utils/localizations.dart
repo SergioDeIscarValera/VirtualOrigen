@@ -133,6 +133,7 @@ class MyLocalizations extends Translations {
           "edit_scene_title": "Edit scene",
           "scene_name": "Scene name",
           "light": "Light",
+          "switch": "Switch",
           "boiler": "Boiler",
           "air_conditioner": "Air conditioner",
           "irrigation": "Irrigation",
@@ -146,6 +147,12 @@ class MyLocalizations extends Translations {
           "change_language": "Change language",
           "change_theme": "Change theme",
           "sign_out": "Sign out",
+          "web_not_support_change_user_data":
+              "Web version does not support changing user data",
+          "user_data_updated": "User data updated",
+          "sing_out_message": "Do you want to sign out?",
+          "sing_out": "Sign out",
+          "image_size_too_big": "Image size is too big (3MB)",
         },
         'es_ES': {
           "app_name": "Virtual Origen",
@@ -279,6 +286,7 @@ class MyLocalizations extends Translations {
           "edit_scene_title": "Editar escena",
           "scene_name": "Nombre de la escena",
           "light": "Luz",
+          "switch": "Interruptor",
           "boiler": "Caldera",
           "air_conditioner": "Aire acondicionado",
           "irrigation": "Riego",
@@ -292,6 +300,13 @@ class MyLocalizations extends Translations {
           "change_language": "Cambiar idioma",
           "change_theme": "Cambiar tema",
           "sign_out": "Cerrar sesión",
+          "web_not_support_change_user_data":
+              "La versión web no soporta cambiar los datos de usuario",
+          "user_data_updated": "Datos de usuario actualizados",
+          "sing_out_message": "¿Quieres cerrar sesión?",
+          "sing_out": "Cerrar sesión",
+          "image_size_too_big":
+              "El tamaño de la imagen es demasiado grande (3MB)",
         },
       };
 }

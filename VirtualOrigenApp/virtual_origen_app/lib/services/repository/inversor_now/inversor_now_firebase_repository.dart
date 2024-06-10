@@ -18,7 +18,9 @@ class InversorNowFirebaseRepository
   @override
   InversorNow fromJson(Map<String, dynamic> json) {
     return InversorNow(
-      battery: json["battery"],
+      battery: json["battery"] is int
+          ? (json["battery"] as int).toDouble()
+          : json["battery"],
       consumption: json["consumption"],
       gain: json["gain"],
     );

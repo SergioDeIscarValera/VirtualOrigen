@@ -18,7 +18,7 @@ class PropertyLongCard extends StatelessWidget {
   }) : super(key: key);
 
   final Property property;
-  final Future<InversorNow> inversorNow;
+  final Future<InversorNow?> inversorNow;
   final Future<PropertyHourWeather> weatherNow;
   final Function(Property) onTap;
   final Function(Property) onLongPress;
@@ -57,7 +57,8 @@ class PropertyLongCard extends StatelessWidget {
                   FutureBuilder(
                     future: inversorNow,
                     builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
+                      if (snapshot.connectionState == ConnectionState.waiting ||
+                          snapshot.data == null) {
                         return const CircularProgressIndicator();
                       }
                       return Expanded(
@@ -191,7 +192,8 @@ class PropertyLongCard extends StatelessWidget {
                             future: inversorNow,
                             builder: (context, snapshot) {
                               if (snapshot.connectionState ==
-                                  ConnectionState.waiting) {
+                                      ConnectionState.waiting ||
+                                  snapshot.data == null) {
                                 return const CircularProgressIndicator();
                               }
                               return Text(
@@ -217,7 +219,8 @@ class PropertyLongCard extends StatelessWidget {
                             future: inversorNow,
                             builder: (context, snapshot) {
                               if (snapshot.connectionState ==
-                                  ConnectionState.waiting) {
+                                      ConnectionState.waiting ||
+                                  snapshot.data == null) {
                                 return const CircularProgressIndicator();
                               }
                               return Text(
@@ -268,13 +271,7 @@ class PropertyLongCard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 mainAxisSize: MainAxisSize.max,
                 children: [
-                  Text(
-                    "devices".tr.replaceAll("{devices}", "0"),
-                    style: MyTextStyles.p.textStyle.copyWith(
-                      color: MyColors.LIGHT.color,
-                      fontSize: 18,
-                    ),
-                  ),
+                  const SizedBox(width: 10),
                   const SizedBox(width: 10),
                   Text(
                     "guests".tr.replaceAll(

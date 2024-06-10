@@ -28,15 +28,22 @@ class AuthServiceFirebase implements IAuthService {
       }
 
       await user.updateDisplayName(name);
-      final file = File(profileImage!);
-      final extension = file.path.split('.').last;
-      final task =
-          _storage.ref().child('profile/${user.uid}.$extension').putFile(file);
-      await task.whenComplete(() => null);
-      final downloadUrl =
-          await _storage.ref('profile/${user.uid}.$extension').getDownloadURL();
+      if (profileImage != null &&
+          profileImage.isNotEmpty &&
+          profileImage != getProfileImage()) {
+        final file = File(profileImage);
+        final extension = file.path.split('.').last;
+        final task = _storage
+            .ref()
+            .child('profile/${user.uid}.$extension')
+            .putFile(file);
+        await task.whenComplete(() => null);
+        final downloadUrl = await _storage
+            .ref('profile/${user.uid}.$extension')
+            .getDownloadURL();
 
-      await user.updatePhotoURL(downloadUrl);
+        await user.updatePhotoURL(downloadUrl);
+      }
 
       if (onSuccess != null) {
         onSuccess();

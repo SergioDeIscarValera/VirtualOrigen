@@ -160,12 +160,12 @@ class HomeController extends GetxController {
     });
   }
 
-  Future<InversorNow> getInversorNow({required String id}) async {
-    return await _inversorNowRepository.findById(
-          id: id,
-          idc: id,
-        ) ??
-        InversorNow.defaultConstructor();
+  Future<InversorNow?> getInversorNow({required String id}) async {
+    var result = _inversorNowRepository.findById(
+      id: id,
+      idc: id,
+    );
+    return result;
   }
 
   void _clear() {

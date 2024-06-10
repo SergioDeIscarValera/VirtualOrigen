@@ -7,7 +7,6 @@ enum Routes {
 
   HOME, // Properties
   PROPERTY, // Smart devices, property details
-  SMART_DEVICE, // Smart device, details
   INVERSOR,
   WEATHER,
   USER,
@@ -32,8 +31,6 @@ extension RoutesPath on Routes {
         return "/home";
       case Routes.PROPERTY:
         return "/home/property";
-      case Routes.SMART_DEVICE:
-        return "/home/property/smart_device";
       case Routes.INVERSOR:
         return "/home/property/inversor";
       case Routes.WEATHER:

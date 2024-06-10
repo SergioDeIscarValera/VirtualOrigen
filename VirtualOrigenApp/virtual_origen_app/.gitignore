@@ -1,5 +1,6 @@
 ./android/app/src/main/res/values/strings.xml
 ./web/config.json
+./web/config/firebase-config.js
 ./lib/services/secrets.dart
 
 # Logs

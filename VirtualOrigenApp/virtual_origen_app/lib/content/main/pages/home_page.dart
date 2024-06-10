@@ -42,30 +42,99 @@ class HomeBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: Column(
-        children: [
-          UserHeader(
-            authService: authService,
-          ),
-          Expanded(
-            child: ListView(
-              padding: const EdgeInsets.all(15),
-              children: [
-                Text(
-                  "properties".tr,
-                  style: MyTextStyles.h3.textStyle,
+    return Column(
+      children: [
+        UserHeader(
+          authService: authService,
+        ),
+        Expanded(
+          child: ListView(
+            padding: const EdgeInsets.all(15),
+            children: [
+              Text(
+                "properties".tr,
+                style: MyTextStyles.h3.textStyle,
+              ),
+              const SizedBox(height: 15),
+              Obx(
+                () => Wrap(
+                  alignment: WrapAlignment.center,
+                  spacing: 15,
+                  runSpacing: 15,
+                  children: [
+                    ...controller.properties
+                        .map(
+                          (property) => context.width < 1100
+                              ? PropertySmallCard(
+                                  property: property,
+                                  inversorNow: controller.getInversorNow(
+                                      id: property.id),
+                                  weatherNow:
+                                      controller.getWeatherNow(id: property.id),
+                                  onTap: (property) {
+                                    controller.navigateProperty(
+                                      property,
+                                      authService.getUid(),
+                                    );
+                                  },
+                                  onLongPress: controller.editPropertyDialog,
+                                )
+                              : PropertyLongCard(
+                                  property: property,
+                                  inversorNow: controller.getInversorNow(
+                                      id: property.id),
+                                  weatherNow:
+                                      controller.getWeatherNow(id: property.id),
+                                  onTap: (property) {
+                                    controller.navigateProperty(
+                                      property,
+                                      authService.getUid(),
+                                    );
+                                  },
+                                  onLongPress: controller.editPropertyDialog,
+                                ),
+                        )
+                        .toList()
+                        .animate(interval: const Duration(milliseconds: 200))
+                        .fade(begin: 0.1),
+                    Tooltip(
+                      message: "add_property".tr,
+                      child: SizedBox(
+                        height: 170,
+                        child: DottedCard(
+                          onTap: controller.newPropertyDialog,
+                        ),
+                      ),
+                    ),
+                  ]
+                      .map((e) => ResponsiveLayout(
+                          widthTablet: 600,
+                          mobile: e,
+                          tablet: SizedBox(
+                            width: context.width * 0.455,
+                            child: e,
+                          ),
+                          desktop: e))
+                      .toList(),
                 ),
-                const SizedBox(height: 15),
-                Obx(
-                  () => Wrap(
-                    alignment: WrapAlignment.center,
-                    spacing: 15,
-                    runSpacing: 15,
-                    children: [
-                      ...controller.properties
-                          .map(
-                            (property) => context.width < 1100
+              ),
+              const SizedBox(height: 15),
+              Text(
+                "properties_shared".tr,
+                style: MyTextStyles.h3.textStyle,
+              ),
+              const SizedBox(height: 15),
+              Obx(
+                () => Wrap(
+                  alignment: WrapAlignment.center,
+                  spacing: 15,
+                  runSpacing: 15,
+                  children: [
+                    ...controller.propertiesShared
+                        .map(
+                          (ownerId, property) => MapEntry(
+                            ownerId,
+                            context.width < 1100
                                 ? PropertySmallCard(
                                     property: property,
                                     inversorNow: controller.getInversorNow(
@@ -75,11 +144,17 @@ class HomeBody extends StatelessWidget {
                                     onTap: (property) {
                                       controller.navigateProperty(
                                         property,
-                                        authService.getUid(),
+                                        ownerId,
                                       );
                                     },
-                                    onLongPress: controller.editPropertyDialog,
-                                  )
+                                    onLongPress: (property) {
+                                      if (property.getPermission(
+                                              authService.getEmail()) ==
+                                          InvitationPermission.READ) {
+                                        return;
+                                      }
+                                      controller.editPropertyDialog(property);
+                                    })
                                 : PropertyLongCard(
                                     property: property,
                                     inversorNow: controller.getInversorNow(
@@ -89,109 +164,31 @@ class HomeBody extends StatelessWidget {
                                     onTap: (property) {
                                       controller.navigateProperty(
                                         property,
-                                        authService.getUid(),
+                                        ownerId,
                                       );
                                     },
                                     onLongPress: controller.editPropertyDialog,
                                   ),
-                          )
-                          .toList()
-                          .animate(interval: const Duration(milliseconds: 200))
-                          .fade(begin: 0.1),
-                      Tooltip(
-                        message: "add_property".tr,
-                        child: SizedBox(
-                          height: 170,
-                          child: DottedCard(
-                            onTap: controller.newPropertyDialog,
                           ),
-                        ),
-                      ),
-                    ]
-                        .map((e) => ResponsiveLayout(
-                            widthTablet: 600,
-                            mobile: e,
-                            tablet: SizedBox(
-                              width: context.width * 0.455,
-                              child: e,
-                            ),
-                            desktop: e))
-                        .toList(),
-                  ),
+                        )
+                        .values
+                        .toList()
+                  ]
+                      .map((e) => ResponsiveLayout(
+                          widthTablet: 600,
+                          mobile: e,
+                          tablet: SizedBox(
+                            width: context.width * 0.455,
+                            child: e,
+                          ),
+                          desktop: e))
+                      .toList(),
                 ),
-                const SizedBox(height: 15),
-                Text(
-                  "properties_shared".tr,
-                  style: MyTextStyles.h3.textStyle,
-                ),
-                const SizedBox(height: 15),
-                Obx(
-                  () => Wrap(
-                    alignment: WrapAlignment.center,
-                    spacing: 15,
-                    runSpacing: 15,
-                    children: [
-                      ...controller.propertiesShared
-                          .map(
-                            (ownerId, property) => MapEntry(
-                              ownerId,
-                              context.width < 1100
-                                  ? PropertySmallCard(
-                                      property: property,
-                                      inversorNow: controller.getInversorNow(
-                                          id: property.id),
-                                      weatherNow: controller.getWeatherNow(
-                                          id: property.id),
-                                      onTap: (property) {
-                                        controller.navigateProperty(
-                                          property,
-                                          ownerId,
-                                        );
-                                      },
-                                      onLongPress: (property) {
-                                        if (property.getPermission(
-                                                authService.getEmail()) ==
-                                            InvitationPermission.READ) {
-                                          return;
-                                        }
-                                        controller.editPropertyDialog(property);
-                                      })
-                                  : PropertyLongCard(
-                                      property: property,
-                                      inversorNow: controller.getInversorNow(
-                                          id: property.id),
-                                      weatherNow: controller.getWeatherNow(
-                                          id: property.id),
-                                      onTap: (property) {
-                                        controller.navigateProperty(
-                                          property,
-                                          ownerId,
-                                        );
-                                      },
-                                      onLongPress:
-                                          controller.editPropertyDialog,
-                                    ),
-                            ),
-                          )
-                          .values
-                          .toList()
-                    ]
-                        .map((e) => ResponsiveLayout(
-                            widthTablet: 600,
-                            mobile: e,
-                            tablet: SizedBox(
-                              width: context.width * 0.455,
-                              child: e,
-                            ),
-                            desktop: e))
-                        .toList(),
-                  ),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }

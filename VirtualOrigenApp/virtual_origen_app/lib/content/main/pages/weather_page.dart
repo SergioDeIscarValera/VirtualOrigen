@@ -40,35 +40,100 @@ class WeatherBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: Column(
-        children: [
-          PropertyHeader(
-            propertySelected: controller.propertySelected,
-            authService: authService,
-          ),
-          Expanded(
-            child: ListView(
-              padding: const EdgeInsets.all(15),
-              children: [
-                Container(
-                  decoration: BoxDecoration(
-                    color: MyColors.INFO.color,
-                    borderRadius: BorderRadius.circular(12),
+    return Column(
+      children: [
+        PropertyHeader(
+          propertySelected: controller.propertySelected,
+          authService: authService,
+        ),
+        Expanded(
+          child: ListView(
+            padding: const EdgeInsets.all(15),
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                  color: MyColors.INFO.color,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                padding: const EdgeInsets.all(15),
+                child: Obx(
+                  () => Wrap(
+                    alignment: WrapAlignment.spaceAround,
+                    runAlignment: WrapAlignment.spaceAround,
+                    spacing: 15,
+                    children: [
+                      for (var i = 0; i < 3; i++)
+                        Column(
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Text(
+                              i == 0
+                                  ? "temperature_title".tr
+                                  : i == 1
+                                      ? "wind_title".tr
+                                      : "rain_title".tr,
+                              style: MyTextStyles.p.textStyle.copyWith(
+                                color: MyColors.LIGHT.color,
+                              ),
+                            ),
+                            const SizedBox(height: 5),
+                            Text(
+                              i == 0
+                                  ? "${controller.weatherNow.value.temperature} °C"
+                                  : i == 1
+                                      ? "${controller.weatherNow.value.windSpeed} m/s"
+                                      : "${controller.weatherNow.value.rainProbability} %",
+                              style: MyTextStyles.h2.textStyle.copyWith(
+                                color: MyColors.LIGHT.color,
+                              ),
+                            ),
+                          ],
+                        ),
+                    ],
                   ),
-                  padding: const EdgeInsets.all(15),
-                  child: Obx(
-                    () => Wrap(
-                      alignment: WrapAlignment.spaceAround,
-                      runAlignment: WrapAlignment.spaceAround,
-                      spacing: 15,
+                ),
+              ),
+              const SizedBox(height: 15),
+              Container(
+                decoration: BoxDecoration(
+                  color: Get.isDarkMode ? Colors.grey[800] : Colors.grey[300],
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 35,
+                  vertical: 15,
+                ),
+                child: Column(
+                  children: [
+                    Text(
+                      "chart_weather_title".tr,
+                      style: MyTextStyles.h2.textStyle.copyWith(
+                        color: MyColors.CONTRARY.color,
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    Wrap(
+                      spacing: 10,
                       children: [
                         for (var i = 0; i < 3; i++)
-                          Column(
+                          Row(
                             mainAxisSize: MainAxisSize.min,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
+                              Container(
+                                width: 20,
+                                height: 20,
+                                decoration: BoxDecoration(
+                                  color: i == 0
+                                      ? MyColors.ORANGE.color
+                                      : i == 1
+                                          ? MyColors.SUCCESS.color
+                                          : MyColors.INFO.color,
+                                  shape: BoxShape.circle,
+                                ),
+                              ),
+                              const SizedBox(width: 5),
                               Text(
                                 i == 0
                                     ? "temperature_title".tr
@@ -76,127 +141,59 @@ class WeatherBody extends StatelessWidget {
                                         ? "wind_title".tr
                                         : "rain_title".tr,
                                 style: MyTextStyles.p.textStyle.copyWith(
-                                  color: MyColors.LIGHT.color,
-                                ),
-                              ),
-                              const SizedBox(height: 5),
-                              Text(
-                                i == 0
-                                    ? "${controller.weatherNow.value.temperature} °C"
-                                    : i == 1
-                                        ? "${controller.weatherNow.value.windSpeed} m/s"
-                                        : "${controller.weatherNow.value.rainProbability} %",
-                                style: MyTextStyles.h2.textStyle.copyWith(
-                                  color: MyColors.LIGHT.color,
+                                  color: MyColors.CONTRARY.color,
                                 ),
                               ),
                             ],
                           ),
                       ],
                     ),
-                  ),
-                ),
-                const SizedBox(height: 15),
-                Container(
-                  decoration: BoxDecoration(
-                    color: Get.isDarkMode ? Colors.grey[800] : Colors.grey[300],
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 35,
-                    vertical: 15,
-                  ),
-                  child: Column(
-                    children: [
-                      Text(
-                        "chart_weather_title".tr,
-                        style: MyTextStyles.h2.textStyle.copyWith(
-                          color: MyColors.CONTRARY.color,
-                        ),
-                      ),
-                      const SizedBox(height: 10),
-                      Wrap(
-                        spacing: 10,
+                    const SizedBox(height: 10),
+                    Obx(() {
+                      final displayCount = context.width * 25 ~/ 2560 >
+                              controller.weatherList.length
+                          ? controller.weatherList.length
+                          : context.width * 25 ~/ 2560;
+                      return Column(
                         children: [
-                          for (var i = 0; i < 3; i++)
-                            Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Container(
-                                  width: 20,
-                                  height: 20,
-                                  decoration: BoxDecoration(
-                                    color: i == 0
-                                        ? MyColors.ORANGE.color
-                                        : i == 1
-                                            ? MyColors.SUCCESS.color
-                                            : MyColors.INFO.color,
-                                    shape: BoxShape.circle,
-                                  ),
-                                ),
-                                const SizedBox(width: 5),
-                                Text(
-                                  i == 0
-                                      ? "temperature_title".tr
-                                      : i == 1
-                                          ? "wind_title".tr
-                                          : "rain_title".tr,
-                                  style: MyTextStyles.p.textStyle.copyWith(
-                                    color: MyColors.CONTRARY.color,
-                                  ),
-                                ),
-                              ],
+                          SizedBox(
+                            width: double.infinity,
+                            height: 300,
+                            child: WeatherChart(
+                              temData: controller.temData,
+                              rainData: controller.rainData,
+                              windSpeedData: controller.windSpeedData,
+                              dateData: controller.weatherList
+                                  .map((e) => e.dateTime.end)
+                                  .toList(),
+                              bottomTitle: "chart_time_title".tr,
+                              displayCount: displayCount,
+                              offset: controller.offsetWeatherChart.value,
                             ),
+                          ),
+                          Slider(
+                            value:
+                                controller.offsetWeatherChart.value.toDouble(),
+                            onChanged: (value) => controller
+                                .offsetWeatherChart.value = value.round(),
+                            min: displayCount.toDouble(),
+                            max: controller.temData.length.toDouble(),
+                            divisions:
+                                controller.temData.length - displayCount <= 0
+                                    ? 1
+                                    : controller.temData.length - displayCount,
+                            activeColor: MyColors.LIGHT.color,
+                          ),
                         ],
-                      ),
-                      const SizedBox(height: 10),
-                      Obx(() {
-                        final displayCount = context.width * 25 ~/ 2560 >
-                                controller.weatherList.length
-                            ? controller.weatherList.length
-                            : context.width * 25 ~/ 2560;
-                        return Column(
-                          children: [
-                            SizedBox(
-                              width: double.infinity,
-                              height: 300,
-                              child: WeatherChart(
-                                temData: controller.temData,
-                                rainData: controller.rainData,
-                                windSpeedData: controller.windSpeedData,
-                                dateData: controller.weatherList
-                                    .map((e) => e.dateTime.end)
-                                    .toList(),
-                                bottomTitle: "chart_time_title".tr,
-                                displayCount: displayCount,
-                                offset: controller.offsetWeatherChart.value,
-                              ),
-                            ),
-                            Slider(
-                              value: controller.offsetWeatherChart.value
-                                  .toDouble(),
-                              onChanged: (value) => controller
-                                  .offsetWeatherChart.value = value.round(),
-                              min: displayCount.toDouble(),
-                              max: controller.temData.length.toDouble(),
-                              divisions:
-                                  controller.temData.length - displayCount <= 0
-                                      ? 1
-                                      : controller.temData.length -
-                                          displayCount,
-                              activeColor: MyColors.LIGHT.color,
-                            ),
-                          ],
-                        );
-                      }),
-                    ],
-                  ),
+                      );
+                    }),
+                  ],
                 ),
-              ],
-            ),
-          )
-        ],
-      ),
+              ),
+            ],
+          ),
+        )
+      ],
     );
   }
 }

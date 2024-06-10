@@ -9,13 +9,11 @@ import 'package:virtual_origen_app/content/first_time/storage/binding/first_time
 import 'package:virtual_origen_app/content/main/pages/home_page.dart';
 import 'package:virtual_origen_app/content/main/pages/inversor_page.dart';
 import 'package:virtual_origen_app/content/main/pages/property_page.dart';
-import 'package:virtual_origen_app/content/main/pages/smart_device_page.dart';
 import 'package:virtual_origen_app/content/main/pages/user_page.dart';
 import 'package:virtual_origen_app/content/main/pages/weather_page.dart';
 import 'package:virtual_origen_app/content/main/storage/binding/home_binding.dart';
 import 'package:virtual_origen_app/content/main/storage/binding/inversor_binding.dart';
 import 'package:virtual_origen_app/content/main/storage/binding/property_binding.dart';
-import 'package:virtual_origen_app/content/main/storage/binding/smart_device_binding.dart';
 import 'package:virtual_origen_app/content/main/storage/binding/user_binding.dart';
 import 'package:virtual_origen_app/content/main/storage/binding/weather_binding.dart';
 import 'package:virtual_origen_app/content/policy/pages/policy_page.dart';
@@ -57,13 +55,6 @@ class AppPages {
       name: Routes.PROPERTY.path,
       page: () => const PropertyPage(),
       binding: PropertyBinding(),
-      transition: Transition.noTransition,
-      transitionDuration: Duration.zero,
-    ),
-    GetPage(
-      name: Routes.SMART_DEVICE.path,
-      page: () => const SmartDevicePage(),
-      binding: SmartDeviceBinding(),
       transition: Transition.noTransition,
       transitionDuration: Duration.zero,
     ),

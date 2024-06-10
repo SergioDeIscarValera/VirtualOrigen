@@ -40,285 +40,276 @@ class UserBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: Column(
-        children: [
-          UserHeader(
-            authService: authService,
-          ),
-          Expanded(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.all(15),
-              child: Column(
-                children: [
-                  Text(
-                    "user_data".tr,
-                    style: MyTextStyles.h3.textStyle,
-                  ),
-                  const SizedBox(height: 15),
-                  GestureDetector(
-                    onTap: () {
-                      controller.pickImage();
-                    },
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(24),
-                      child: Obx(
-                        () {
-                          if (controller.profileImage.value
-                                  .startsWith("http") ||
-                              GetPlatform.isWeb) {
-                            return Image.network(
-                              width: 200,
-                              height: 200,
-                              fit: BoxFit.cover,
-                              controller.profileImage.value,
-                              loadingBuilder:
-                                  (context, child, loadingProgress) =>
-                                      loadingProgress == null
-                                          ? child
-                                          : const CircularProgressIndicator(),
-                              errorBuilder: (context, error, stackTrace) =>
-                                  Icon(
-                                Icons.error_outline_rounded,
-                                color: MyColors.CONTRARY.color,
-                                size: 150,
-                              ),
-                            );
-                          } else {
-                            return Image.file(
-                              File(controller.profileImage.value),
-                              width: 200,
-                              height: 200,
-                              fit: BoxFit.cover,
-                              errorBuilder: (context, error, stackTrace) =>
-                                  Icon(
-                                Icons.error_outline_rounded,
-                                color: MyColors.CONTRARY.color,
-                                size: 150,
-                              ),
-                            );
-                          }
-                        },
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 15),
-                  MyTextForm(
-                    controller: controller.nameController,
-                    icon: Icons.person,
-                    label: "user_name".tr,
-                    color: MyColors.PRIMARY,
-                  ),
-                  const SizedBox(height: 30),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      RoundedButton(
-                        onPressed: () {
-                          controller.reset();
-                        },
-                        color: MyColors.WARNING,
-                        textColor: MyColors.LIGHT,
-                        text: "cancel".tr,
-                        icon: Icons.refresh,
-                        isSmall: context.width < 550,
-                      ),
-                      RoundedButton(
-                        onPressed: () {
-                          controller.saveUserData();
-                        },
-                        color: MyColors.PRIMARY,
-                        textColor: MyColors.LIGHT,
-                        text: "save".tr,
-                        icon: Icons.save,
-                        isSmall: context.width < 550,
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 15),
-                  Divider(
-                    color: MyColors.CONTRARY.color,
-                    thickness: 2,
-                  ),
-                  const SizedBox(height: 15),
-                  Obx(
-                    () => ExpansionTile(
-                      title: Text(
-                        "new_invitations".tr,
-                        style: MyTextStyles.p.textStyle,
-                        textAlign: TextAlign.center,
-                      ),
-                      leading: Icon(
-                        Icons.notifications_active,
-                        color: MyColors.SUCCESS.color,
-                      ),
-                      expandedAlignment: Alignment.center,
-                      onExpansionChanged: (value) {
-                        if (value) {
-                          controller.mackAsReaded();
+    return Column(
+      children: [
+        UserHeader(
+          authService: authService,
+        ),
+        Expanded(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(15),
+            child: Column(
+              children: [
+                Text(
+                  "user_data".tr,
+                  style: MyTextStyles.h3.textStyle,
+                ),
+                const SizedBox(height: 15),
+                GestureDetector(
+                  onTap: () {
+                    controller.pickImage();
+                  },
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(24),
+                    child: Obx(
+                      () {
+                        if (controller.profileImage.value.startsWith("http") ||
+                            GetPlatform.isWeb) {
+                          return Image.network(
+                            width: 200,
+                            height: 200,
+                            fit: BoxFit.cover,
+                            controller.profileImage.value,
+                            loadingBuilder: (context, child, loadingProgress) =>
+                                loadingProgress == null
+                                    ? child
+                                    : const CircularProgressIndicator(),
+                            errorBuilder: (context, error, stackTrace) => Icon(
+                              Icons.error_outline_rounded,
+                              color: MyColors.CONTRARY.color,
+                              size: 150,
+                            ),
+                          );
+                        } else {
+                          return Image.file(
+                            File(controller.profileImage.value),
+                            width: 200,
+                            height: 200,
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) => Icon(
+                              Icons.error_outline_rounded,
+                              color: MyColors.CONTRARY.color,
+                              size: 150,
+                            ),
+                          );
                         }
                       },
-                      children: controller.newInvitations
-                          .map(
-                            (invitation) => ListTile(
-                              title: Text(
-                                invitation.propertyName,
-                                style: MyTextStyles.p.textStyle.copyWith(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              subtitle: Text(
-                                invitation.fromEmail,
-                                style: MyTextStyles.p.textStyle.copyWith(
-                                  color:
-                                      MyColors.CONTRARY.color.withOpacity(0.4),
-                                ),
-                              ),
-                              leading: ClipRRect(
-                                borderRadius: BorderRadius.circular(50),
-                                child: Image.network(
-                                  invitation.fromProfileImage,
-                                  width: 50,
-                                  height: 50,
-                                  loadingBuilder: (context, child,
-                                          loadingProgress) =>
-                                      loadingProgress == null
-                                          ? child
-                                          : const CircularProgressIndicator(),
-                                  errorBuilder: (context, error, stackTrace) =>
-                                      Icon(
-                                    Icons.error_outline_rounded,
-                                    color: MyColors.CONTRARY.color,
-                                    size: 50,
-                                  ),
-                                ),
-                              ),
-                              trailing: Wrap(
-                                children: [
-                                  IconButton(
-                                    icon: Icon(
-                                      Icons.close,
-                                      color: MyColors.DANGER.color,
-                                    ),
-                                    onPressed: () {
-                                      controller.processInvitation(
-                                        invitation,
-                                        false,
-                                      );
-                                    },
-                                  ),
-                                  IconButton(
-                                    icon: Icon(
-                                      Icons.check,
-                                      color: MyColors.SUCCESS.color,
-                                    ),
-                                    onPressed: () {
-                                      controller.processInvitation(
-                                        invitation,
-                                        true,
-                                      );
-                                    },
-                                  ),
-                                ],
-                              ),
-                            ),
-                          )
-                          .toList(),
                     ),
                   ),
-                  const SizedBox(height: 15),
-                  Obx(
-                    () => ExpansionTile(
-                      title: Text(
-                        "invitations".tr,
-                        style: MyTextStyles.p.textStyle,
-                        textAlign: TextAlign.center,
-                      ),
-                      leading: Icon(
-                        Icons.house,
-                        color: MyColors.SUCCESS.color,
-                      ),
-                      expandedAlignment: Alignment.center,
-                      children: controller.oldInvitations
-                          .map(
-                            (invitation) => ListTile(
-                              title: Text(
-                                invitation.propertyName,
-                                style: MyTextStyles.p.textStyle.copyWith(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              subtitle: Text(
-                                invitation.fromEmail,
-                                style: MyTextStyles.p.textStyle.copyWith(
-                                  color:
-                                      MyColors.CONTRARY.color.withOpacity(0.4),
-                                ),
-                              ),
-                              trailing: Wrap(
-                                children: [
-                                  IconButton(
-                                    icon: Icon(
-                                      Icons.delete,
-                                      color: MyColors.DANGER.color,
-                                    ),
-                                    onPressed: () {
-                                      controller.removeInvitation(
-                                        invitation,
-                                      );
-                                    },
-                                  ),
-                                ],
+                ),
+                const SizedBox(height: 15),
+                MyTextForm(
+                  controller: controller.nameController,
+                  icon: Icons.person,
+                  label: "user_name".tr,
+                  color: MyColors.PRIMARY,
+                ),
+                const SizedBox(height: 30),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    RoundedButton(
+                      onPressed: () {
+                        controller.reset();
+                      },
+                      color: MyColors.WARNING,
+                      textColor: MyColors.LIGHT,
+                      text: "cancel".tr,
+                      icon: Icons.refresh,
+                      isSmall: context.width < 550,
+                    ),
+                    RoundedButton(
+                      onPressed: () {
+                        controller.saveUserData();
+                      },
+                      color: MyColors.PRIMARY,
+                      textColor: MyColors.LIGHT,
+                      text: "save".tr,
+                      icon: Icons.save,
+                      isSmall: context.width < 550,
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 15),
+                Divider(
+                  color: MyColors.CONTRARY.color,
+                  thickness: 2,
+                ),
+                const SizedBox(height: 15),
+                Obx(
+                  () => ExpansionTile(
+                    title: Text(
+                      "new_invitations".tr,
+                      style: MyTextStyles.p.textStyle,
+                      textAlign: TextAlign.center,
+                    ),
+                    leading: Icon(
+                      Icons.notifications_active,
+                      color: MyColors.SUCCESS.color,
+                    ),
+                    expandedAlignment: Alignment.center,
+                    onExpansionChanged: (value) {
+                      if (value) {
+                        controller.mackAsReaded();
+                      }
+                    },
+                    children: controller.newInvitations
+                        .map(
+                          (invitation) => ListTile(
+                            title: Text(
+                              invitation.propertyName,
+                              style: MyTextStyles.p.textStyle.copyWith(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
                               ),
                             ),
-                          )
-                          .toList(),
+                            subtitle: Text(
+                              invitation.fromEmail,
+                              style: MyTextStyles.p.textStyle.copyWith(
+                                color: MyColors.CONTRARY.color.withOpacity(0.4),
+                              ),
+                            ),
+                            leading: ClipRRect(
+                              borderRadius: BorderRadius.circular(50),
+                              child: Image.network(
+                                invitation.fromProfileImage,
+                                width: 50,
+                                height: 50,
+                                loadingBuilder: (context, child,
+                                        loadingProgress) =>
+                                    loadingProgress == null
+                                        ? child
+                                        : const CircularProgressIndicator(),
+                                errorBuilder: (context, error, stackTrace) =>
+                                    Icon(
+                                  Icons.error_outline_rounded,
+                                  color: MyColors.CONTRARY.color,
+                                  size: 50,
+                                ),
+                              ),
+                            ),
+                            trailing: Wrap(
+                              children: [
+                                IconButton(
+                                  icon: Icon(
+                                    Icons.close,
+                                    color: MyColors.DANGER.color,
+                                  ),
+                                  onPressed: () {
+                                    controller.processInvitation(
+                                      invitation,
+                                      false,
+                                    );
+                                  },
+                                ),
+                                IconButton(
+                                  icon: Icon(
+                                    Icons.check,
+                                    color: MyColors.SUCCESS.color,
+                                  ),
+                                  onPressed: () {
+                                    controller.processInvitation(
+                                      invitation,
+                                      true,
+                                    );
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                        )
+                        .toList(),
+                  ),
+                ),
+                const SizedBox(height: 15),
+                Obx(
+                  () => ExpansionTile(
+                    title: Text(
+                      "invitations".tr,
+                      style: MyTextStyles.p.textStyle,
+                      textAlign: TextAlign.center,
                     ),
+                    leading: Icon(
+                      Icons.house,
+                      color: MyColors.SUCCESS.color,
+                    ),
+                    expandedAlignment: Alignment.center,
+                    children: controller.oldInvitations
+                        .map(
+                          (invitation) => ListTile(
+                            title: Text(
+                              invitation.propertyName,
+                              style: MyTextStyles.p.textStyle.copyWith(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            subtitle: Text(
+                              invitation.fromEmail,
+                              style: MyTextStyles.p.textStyle.copyWith(
+                                color: MyColors.CONTRARY.color.withOpacity(0.4),
+                              ),
+                            ),
+                            trailing: Wrap(
+                              children: [
+                                IconButton(
+                                  icon: Icon(
+                                    Icons.delete,
+                                    color: MyColors.DANGER.color,
+                                  ),
+                                  onPressed: () {
+                                    controller.removeInvitation(
+                                      invitation,
+                                    );
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                        )
+                        .toList(),
                   ),
-                  const SizedBox(height: 15),
-                  Divider(
-                    color: MyColors.CONTRARY.color,
-                    thickness: 2,
-                  ),
-                  const SizedBox(height: 15),
-                  Wrap(
-                    spacing: 10,
-                    children: [
-                      RoundedButton(
-                        onPressed: controller.signOut,
-                        color: MyColors.DANGER,
-                        textColor: MyColors.LIGHT,
-                        text: "sign_out".tr,
-                        icon: Icons.logout,
-                        isSmall: context.width < 550,
-                      ),
-                      RoundedButton(
-                        onPressed: controller.changeTheme,
-                        color: MyColors.CONTRARY,
-                        textColor: MyColors.CURRENT,
-                        text: "change_theme".tr,
-                        icon:
-                            Get.isDarkMode ? Icons.light_mode : Icons.dark_mode,
-                        isSmall: context.width < 550,
-                      ),
-                      RoundedButton(
-                        onPressed: controller.changeLanguage,
-                        color: MyColors.CONTRARY,
-                        textColor: MyColors.CURRENT,
-                        text: "change_language".tr,
-                        icon: Icons.translate,
-                        isSmall: context.width < 550,
-                      ),
-                    ],
-                  )
-                ],
-              ),
+                ),
+                const SizedBox(height: 15),
+                Divider(
+                  color: MyColors.CONTRARY.color,
+                  thickness: 2,
+                ),
+                const SizedBox(height: 15),
+                Wrap(
+                  spacing: 10,
+                  children: [
+                    RoundedButton(
+                      onPressed: controller.signOut,
+                      color: MyColors.DANGER,
+                      textColor: MyColors.LIGHT,
+                      text: "sign_out".tr,
+                      icon: Icons.logout,
+                      isSmall: context.width < 550,
+                    ),
+                    RoundedButton(
+                      onPressed: controller.changeTheme,
+                      color: MyColors.CONTRARY,
+                      textColor: MyColors.CURRENT,
+                      text: "change_theme".tr,
+                      icon: Get.isDarkMode ? Icons.light_mode : Icons.dark_mode,
+                      isSmall: context.width < 550,
+                    ),
+                    RoundedButton(
+                      onPressed: controller.changeLanguage,
+                      color: MyColors.CONTRARY,
+                      textColor: MyColors.CURRENT,
+                      text: "change_language".tr,
+                      icon: Icons.translate,
+                      isSmall: context.width < 550,
+                    ),
+                  ],
+                )
+              ],
             ),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }

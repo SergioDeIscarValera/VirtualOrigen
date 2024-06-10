@@ -53,246 +53,243 @@ class InversorBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: Column(
-        children: [
-          PropertyHeader(
-            propertySelected: controller.propertySelected,
-            authService: authService,
-          ),
-          Expanded(
-            child: ListView(
-              padding: const EdgeInsets.all(15),
-              children: [
-                Container(
-                  decoration: BoxDecoration(
-                    color: MyColors.SECONDARY.color,
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  padding: const EdgeInsets.all(15),
-                  child: Obx(
-                    () => Row(
-                      mainAxisSize: MainAxisSize.max,
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        Flexible(
-                          child: Wrap(
-                            crossAxisAlignment: WrapCrossAlignment.center,
-                            runAlignment: WrapAlignment.center,
-                            spacing: 10,
-                            children: [
-                              Icon(
-                                Icons.battery_charging_full,
-                                color: MyColors.LIGHT.color,
-                              ),
-                              Tooltip(
-                                message: "consumption_reason".tr,
-                                child: Text(
-                                  "${controller.inversorNow.value.consumption.toInt()} W",
-                                  style: MyTextStyles.p.textStyle.copyWith(
-                                    color: MyColors.LIGHT.color,
-                                    fontSize: 22,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Flexible(
-                          flex: 3,
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Expanded(
-                                child: LinearProgressIndicator(
-                                  value: controller.inversorNow.value.battery /
-                                      100,
-                                  borderRadius: BorderRadius.circular(12),
-                                  minHeight: 20,
-                                  backgroundColor: MyColors.LIGHT.color,
-                                  valueColor: AlwaysStoppedAnimation(
-                                    controller.inversorNow.value.battery < 15
-                                        ? MyColors.DANGER.color
-                                        : controller.inversorNow.value.battery <
-                                                40
-                                            ? MyColors.WARNING.color
-                                            : MyColors.SUCCESS.color,
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(width: 10),
-                              Text(
-                                "${controller.inversorNow.value.battery.toInt()} %",
+    return Column(
+      children: [
+        PropertyHeader(
+          propertySelected: controller.propertySelected,
+          authService: authService,
+        ),
+        Expanded(
+          child: ListView(
+            padding: const EdgeInsets.all(15),
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                  color: MyColors.SECONDARY.color,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                padding: const EdgeInsets.all(15),
+                child: Obx(
+                  () => Row(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Flexible(
+                        child: Wrap(
+                          crossAxisAlignment: WrapCrossAlignment.center,
+                          runAlignment: WrapAlignment.center,
+                          spacing: 10,
+                          children: [
+                            Icon(
+                              Icons.battery_charging_full,
+                              color: MyColors.LIGHT.color,
+                            ),
+                            Tooltip(
+                              message: "consumption_reason".tr,
+                              child: Text(
+                                "${controller.inversorNow.value.consumption.toInt()} W",
                                 style: MyTextStyles.p.textStyle.copyWith(
                                   color: MyColors.LIGHT.color,
                                   fontSize: 22,
                                 ),
                               ),
-                            ],
-                          ),
-                        ),
-                        Flexible(
-                          child: Wrap(
-                            crossAxisAlignment: WrapCrossAlignment.center,
-                            runAlignment: WrapAlignment.center,
-                            spacing: 10,
-                            children: [
-                              Icon(
-                                Icons.battery_saver,
-                                color: MyColors.LIGHT.color,
-                              ),
-                              Tooltip(
-                                message: "gain_reason".tr,
-                                child: Text(
-                                  "${controller.inversorNow.value.gain.toInt()} W",
-                                  style: MyTextStyles.p.textStyle.copyWith(
-                                    color: MyColors.LIGHT.color,
-                                    fontSize: 22,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 25),
-                Container(
-                  decoration: BoxDecoration(
-                    color: MyColors.INFO.color,
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  padding: const EdgeInsets.only(
-                      top: 15, bottom: 10, right: 35, left: 10),
-                  child: Column(
-                    children: [
-                      Text(
-                        "chart_inversor_title".tr,
-                        style: MyTextStyles.h2.textStyle.copyWith(
-                          color: MyColors.LIGHT.color,
-                        ),
-                      ),
-                      const SizedBox(height: 10),
-                      Wrap(
-                        spacing: 10,
-                        children: [
-                          for (var i = 0; i < 3; i++)
-                            Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Container(
-                                  width: 20,
-                                  height: 20,
-                                  decoration: BoxDecoration(
-                                    color: i == 0
-                                        ? MyColors.LIGHT.color
-                                        : i == 1
-                                            ? MyColors.SUCCESS.color
-                                            : MyColors.ORANGE.color,
-                                    shape: BoxShape.circle,
-                                  ),
-                                ),
-                                const SizedBox(width: 5),
-                                Text(
-                                  i == 0
-                                      ? "battery_title".tr
-                                      : i == 1
-                                          ? "gain_title".tr
-                                          : "consumption_title".tr,
-                                  style: MyTextStyles.p.textStyle.copyWith(
-                                    color: MyColors.LIGHT.color,
-                                  ),
-                                ),
-                              ],
                             ),
-                        ],
-                      ),
-                      const SizedBox(height: 10),
-                      Obx(() {
-                        final displayCount = context.width * 25 ~/ 2560 >
-                                controller.inversorYerserday.length
-                            ? controller.inversorYerserday.length
-                            : context.width * 25 ~/ 2560;
-
-                        return Column(
-                          children: [
-                            SizedBox(
-                              width: double.infinity,
-                              height: 300,
-                              child: InversorChart(
-                                batteryData: controller.batteryData,
-                                gainData: controller.gainData,
-                                consumptionData: controller.consumptionData,
-                                dateData: controller.inversorYerserday
-                                    .map((element) => element.dateTime)
-                                    .toList(),
-                                leftTitle: "chart_battery_title".tr,
-                                bottomTitle: "chart_time_title".tr,
-                                displayCount: displayCount,
-                                offset: controller.offsetBatteryChart.value,
-                              ),
-                            ),
-                            Slider(
-                              value: controller.offsetBatteryChart.value
-                                  .toDouble(),
-                              onChanged: (value) => controller
-                                  .offsetBatteryChart.value = value.round(),
-                              min: displayCount.toDouble(),
-                              max: controller.batteryData.length.toDouble(),
-                              divisions: controller.batteryData.length -
-                                          displayCount <=
-                                      0
-                                  ? 1
-                                  : controller.batteryData.length -
-                                      displayCount,
-                              activeColor: MyColors.LIGHT.color,
-                            )
                           ],
-                        );
-                      }),
-                      // SizedBox(
-                      //   width: double.infinity,
-                      //   height: 300,
-                      //   child: Obx(
-                      //     () => InversorChart(
-                      //       batteryData: controller.batteryData,
-                      //       gainData: controller.gainData,
-                      //       consumptionData: controller.consumptionData,
-                      //       dateData: controller.inversorYerserday
-                      //           .map((element) => element.dateTime)
-                      //           .toList(),
-                      //       leftTitle: "chart_battery_title".tr,
-                      //       bottomTitle: "chart_time_title".tr,
-                      //       displayCount: displayCount,
-                      //       offset: controller.offsetBatteryChart.value,
-                      //     ),
-                      //   ),
-                      // ),
-                      // Obx(
-                      //   () => Slider(
-                      //     value: controller.offsetBatteryChart.value.toDouble(),
-                      //     onChanged: (value) => controller
-                      //         .offsetBatteryChart.value = value.round(),
-                      //     min: displayCount.toDouble(),
-                      //     max: controller.batteryData.length.toDouble(),
-                      //     divisions:
-                      //         controller.batteryData.length - displayCount <= 0
-                      //             ? 1
-                      //             : controller.batteryData.length -
-                      //                 displayCount,
-                      //     activeColor: MyColors.LIGHT.color,
-                      //   ),
-                      // ),
+                        ),
+                      ),
+                      Flexible(
+                        flex: 3,
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Expanded(
+                              child: LinearProgressIndicator(
+                                value:
+                                    controller.inversorNow.value.battery / 100,
+                                borderRadius: BorderRadius.circular(12),
+                                minHeight: 20,
+                                backgroundColor: MyColors.LIGHT.color,
+                                valueColor: AlwaysStoppedAnimation(
+                                  controller.inversorNow.value.battery < 15
+                                      ? MyColors.DANGER.color
+                                      : controller.inversorNow.value.battery <
+                                              40
+                                          ? MyColors.WARNING.color
+                                          : MyColors.SUCCESS.color,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 10),
+                            Text(
+                              "${controller.inversorNow.value.battery.toInt()} %",
+                              style: MyTextStyles.p.textStyle.copyWith(
+                                color: MyColors.LIGHT.color,
+                                fontSize: 22,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Flexible(
+                        child: Wrap(
+                          crossAxisAlignment: WrapCrossAlignment.center,
+                          runAlignment: WrapAlignment.center,
+                          spacing: 10,
+                          children: [
+                            Icon(
+                              Icons.battery_saver,
+                              color: MyColors.LIGHT.color,
+                            ),
+                            Tooltip(
+                              message: "gain_reason".tr,
+                              child: Text(
+                                "${controller.inversorNow.value.gain.toInt()} W",
+                                style: MyTextStyles.p.textStyle.copyWith(
+                                  color: MyColors.LIGHT.color,
+                                  fontSize: 22,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                     ],
                   ),
                 ),
-              ],
-            ),
-          )
-        ],
-      ),
+              ),
+              const SizedBox(height: 25),
+              Container(
+                decoration: BoxDecoration(
+                  color: MyColors.INFO.color,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                padding: const EdgeInsets.only(
+                    top: 15, bottom: 10, right: 35, left: 10),
+                child: Column(
+                  children: [
+                    Text(
+                      "chart_inversor_title".tr,
+                      style: MyTextStyles.h2.textStyle.copyWith(
+                        color: MyColors.LIGHT.color,
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    Wrap(
+                      spacing: 10,
+                      children: [
+                        for (var i = 0; i < 3; i++)
+                          Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Container(
+                                width: 20,
+                                height: 20,
+                                decoration: BoxDecoration(
+                                  color: i == 0
+                                      ? MyColors.LIGHT.color
+                                      : i == 1
+                                          ? MyColors.SUCCESS.color
+                                          : MyColors.ORANGE.color,
+                                  shape: BoxShape.circle,
+                                ),
+                              ),
+                              const SizedBox(width: 5),
+                              Text(
+                                i == 0
+                                    ? "battery_title".tr
+                                    : i == 1
+                                        ? "gain_title".tr
+                                        : "consumption_title".tr,
+                                style: MyTextStyles.p.textStyle.copyWith(
+                                  color: MyColors.LIGHT.color,
+                                ),
+                              ),
+                            ],
+                          ),
+                      ],
+                    ),
+                    const SizedBox(height: 10),
+                    Obx(() {
+                      final displayCount = context.width * 25 ~/ 2560 >
+                              controller.inversorYerserday.length
+                          ? controller.inversorYerserday.length
+                          : context.width * 25 ~/ 2560;
+
+                      return Column(
+                        children: [
+                          SizedBox(
+                            width: double.infinity,
+                            height: 300,
+                            child: InversorChart(
+                              batteryData: controller.batteryData,
+                              gainData: controller.gainData,
+                              consumptionData: controller.consumptionData,
+                              dateData: controller.inversorYerserday
+                                  .map((element) => element.dateTime)
+                                  .toList(),
+                              leftTitle: "chart_battery_title".tr,
+                              bottomTitle: "chart_time_title".tr,
+                              displayCount: displayCount,
+                              offset: controller.offsetBatteryChart.value,
+                            ),
+                          ),
+                          Slider(
+                            value:
+                                controller.offsetBatteryChart.value.toDouble(),
+                            onChanged: (value) => controller
+                                .offsetBatteryChart.value = value.round(),
+                            min: displayCount.toDouble(),
+                            max: controller.batteryData.length.toDouble(),
+                            divisions: controller.batteryData.length -
+                                        displayCount <=
+                                    0
+                                ? 1
+                                : controller.batteryData.length - displayCount,
+                            activeColor: MyColors.LIGHT.color,
+                          )
+                        ],
+                      );
+                    }),
+                    // SizedBox(
+                    //   width: double.infinity,
+                    //   height: 300,
+                    //   child: Obx(
+                    //     () => InversorChart(
+                    //       batteryData: controller.batteryData,
+                    //       gainData: controller.gainData,
+                    //       consumptionData: controller.consumptionData,
+                    //       dateData: controller.inversorYerserday
+                    //           .map((element) => element.dateTime)
+                    //           .toList(),
+                    //       leftTitle: "chart_battery_title".tr,
+                    //       bottomTitle: "chart_time_title".tr,
+                    //       displayCount: displayCount,
+                    //       offset: controller.offsetBatteryChart.value,
+                    //     ),
+                    //   ),
+                    // ),
+                    // Obx(
+                    //   () => Slider(
+                    //     value: controller.offsetBatteryChart.value.toDouble(),
+                    //     onChanged: (value) => controller
+                    //         .offsetBatteryChart.value = value.round(),
+                    //     min: displayCount.toDouble(),
+                    //     max: controller.batteryData.length.toDouble(),
+                    //     divisions:
+                    //         controller.batteryData.length - displayCount <= 0
+                    //             ? 1
+                    //             : controller.batteryData.length -
+                    //                 displayCount,
+                    //     activeColor: MyColors.LIGHT.color,
+                    //   ),
+                    // ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        )
+      ],
     );
   }
 }
